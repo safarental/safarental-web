@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { ReactNode } from 'react';
@@ -62,7 +63,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       headers.append('Authorization', `Bearer ${currentToken}`);
     }
     headers.append('Accept', 'application/json');
-    headers.append('Content-Type', 'application/json');
+
+    // Do not set Content-Type if body is FormData, browser will do it with correct boundary
+    if (!(options.body instanceof FormData)) {
+      headers.append('Content-Type', 'application/json');
+    }
 
     return fetch(url, { ...options, headers });
   }, []);
@@ -119,8 +124,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error(data.message || 'Registration failed');
       }
       
-      // Optionally log in the user directly or redirect to login
-      // For this example, redirecting to login after successful registration
       toast({ title: 'Success', description: 'Registration successful! Please log in.' });
       router.push('/login');
     } catch (error: any) {
@@ -138,7 +141,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
          await fetchWithAuth(`${API_BASE_URL}/logout`, { method: 'POST' });
       }
     } catch (error: any) {
-      // Even if API logout fails, clear client-side session
       console.error('Logout API call failed, proceeding with client-side logout:', error);
       toast({ title: 'Logout Info', description: 'Could not reach server, logged out locally.', variant: 'default' });
     } finally {

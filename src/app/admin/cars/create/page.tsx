@@ -21,18 +21,30 @@ export default function CreateCarPage() {
 
   const onSubmit = async (values: CarFormValues) => {
     setIsSubmitting(true);
-    try {
-      // Ensure nullable fields are correctly handled if empty strings are passed
-      const payload = {
-        ...values,
-        plat_number: values.plat_number || null,
-        description: values.description || null,
-        picture_upload: values.picture_upload || null,
-      };
+    const formData = new FormData();
 
+    // Append fields to FormData
+    formData.append('category', values.category);
+    formData.append('merk', values.merk);
+    formData.append('model', values.model);
+    formData.append('year', String(values.year));
+    formData.append('transmission', values.transmission);
+    formData.append('seat', String(values.seat));
+    formData.append('status', values.status);
+    formData.append('price', String(values.price));
+
+    formData.append('plat_number', values.plat_number || '');
+    formData.append('description', values.description || '');
+    
+    const pictureFile = values.picture_upload?.[0] as File | undefined;
+    if (pictureFile) {
+      formData.append('picture_upload', pictureFile);
+    }
+
+    try {
       const response = await fetchWithAuth(`${API_BASE_URL}/admin/mobils`, {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: formData, // Send FormData directly
       });
 
       const data = await response.json();

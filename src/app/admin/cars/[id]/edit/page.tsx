@@ -54,18 +54,51 @@ export default function EditCarPage() {
   const onSubmit = async (values: CarFormValues) => {
     if (!carId) return;
     setIsSubmitting(true);
-    try {
-      const payload = {
-        ...values,
-        plat_number: values.plat_number || null,
-        description: values.description || null,
-        picture_upload: values.picture_upload || null,
-      };
+    const formData = new FormData();
 
+    // Append fields to FormData
+    formData.append('category', values.category);
+    formData.append('merk', values.merk);
+    formData.append('model', values.model);
+    formData.append('year', String(values.year));
+    formData.append('transmission', values.transmission);
+    formData.append('seat', String(values.seat));
+    formData.append('status', values.status);
+    formData.append('price', String(values.price));
+
+    formData.append('plat_number', values.plat_number || '');
+    formData.append('description', values.description || '');
+    
+    const pictureFile = values.picture_upload?.[0] as File | undefined;
+    if (pictureFile) {
+      formData.append('picture_upload', pictureFile);
+    }
+    // If no new picture is uploaded, the Laravel backend will keep the old one.
+
+    // Laravel handles PUT with FormData if _method field is sent with POST
+    // However, many modern servers support PUT with FormData directly.
+    // Let's try direct PUT first. If issues, switch to POST + _method: 'PUT'.
+    // formData.append('_method', 'PUT'); // if using POST to simulate PUT
+
+    try {
       const response = await fetchWithAuth(`${API_BASE_URL}/admin/mobils/${carId}`, {
-        method: 'PUT', // Laravel uses PUT for updates, often POST with _method: 'PUT' for HTML forms
-        body: JSON.stringify(payload),
+        method: 'POST', // Use POST when sending FormData with _method for PUT/PATCH
+        body: formData,
       });
+      // If your server DIRECTLY supports PUT with FormData:
+      // method: 'PUT',
+      // body: formData,
+
+      // The controller is `Route::put`, so let's assume it can handle PUT with FormData.
+      // If not, the above POST + _method approach is the fallback.
+      // Re-checking the Laravel controller and route definition:
+      // `Route::put('/mobils/{id}', [MobilController::class, 'update']);`
+      // `public function update(Request $request, $id)`
+      // This setup usually means Laravel expects a true PUT request or POST with _method.
+      // For file uploads, POST with _method is more common. So we append _method to formData.
+      formData.append('_method', 'PUT');
+
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -173,7 +206,7 @@ export default function EditCarPage() {
           isSubmitting={isSubmitting}
           submitButtonText="Update Car"
           formTitle={`Editing: ${car.merk} ${car.model}`}
-          formDescription="Update the car details below."
+          formDescription="Update the car details below. To change the picture, upload a new file."
         />
       </div>
     </AppLayout>

@@ -28,7 +28,7 @@ export const carSchema = z.object({
   price: z.coerce
     .number({ invalid_type_error: "Price must be a number." })
     .min(0, "Price must be non-negative."),
-  picture_upload: z.string().optional().nullable().or(z.literal('')), // For URL or identifier
+  picture_upload: z.any().optional().nullable(), // Changed from string URL to any for FileList object
 });
 
 export type CarFormValues = z.infer<typeof carSchema>;
