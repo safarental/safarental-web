@@ -86,6 +86,31 @@ export default async function LandingPage() {
         </div>
       </header>
 
+      <section id="excellence" className="py-16 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-4 text-primary">Rasakan Bedanya, Nikmati Keunggulannya!</h2>
+          <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
+            Kami tidak hanya menyewakan mobil, kami memberikan pengalaman berkendara terbaik dengan berbagai keunggulan yang siap menemani setiap perjalanan Anda.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { icon: CarFront, title: "Armada Selalu Prima", description: "Mobil-mobil terbaru dengan perawatan rutin untuk kenyamanan dan keamanan maksimal." },
+              { icon: BadgePercent, title: "Harga Jujur & Bersaing", description: "Tarif transparan tanpa biaya tersembunyi, penawaran terbaik untuk kualitas prima." },
+              { icon: Rocket, title: "Pemesanan Super Cepat", description: "Proses booking online yang mudah, hanya dalam beberapa klik mobil siap Anda gunakan." },
+              { icon: LifeBuoy, title: "Dukungan Pelanggan Responsif", description: "Tim kami siap membantu Anda 24/7, menjawab pertanyaan dan mengatasi kendala dengan sigap." },
+            ].map((item, index) => (
+              <Card key={index} className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="flex justify-center mb-4">
+                  <item.icon className="h-12 w-12 text-primary" />
+                </div>
+                <CardTitle className="text-xl font-semibold mb-2">{item.title}</CardTitle>
+                <CardDescription>{item.description}</CardDescription>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {mobils && mobils.length > 0 && (
         <section id="cars" className="py-16 px-4 bg-muted/30">
           <div className="container mx-auto">
@@ -118,32 +143,7 @@ export default async function LandingPage() {
         </section>
       )}
 
-      <section id="excellence" className="py-16 px-4">
-        <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4 text-primary">Rasakan Bedanya, Nikmati Keunggulannya!</h2>
-          <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
-            Kami tidak hanya menyewakan mobil, kami memberikan pengalaman berkendara terbaik dengan berbagai keunggulan yang siap menemani setiap perjalanan Anda.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { icon: CarFront, title: "Armada Selalu Prima", description: "Mobil-mobil terbaru dengan perawatan rutin untuk kenyamanan dan keamanan maksimal." },
-              { icon: BadgePercent, title: "Harga Jujur & Bersaing", description: "Tarif transparan tanpa biaya tersembunyi, penawaran terbaik untuk kualitas prima." },
-              { icon: Rocket, title: "Pemesanan Super Cepat", description: "Proses booking online yang mudah, hanya dalam beberapa klik mobil siap Anda gunakan." },
-              { icon: LifeBuoy, title: "Dukungan Pelanggan Responsif", description: "Tim kami siap membantu Anda 24/7, menjawab pertanyaan dan mengatasi kendala dengan sigap." },
-            ].map((item, index) => (
-              <Card key={index} className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="flex justify-center mb-4">
-                  <item.icon className="h-12 w-12 text-primary" />
-                </div>
-                <CardTitle className="text-xl font-semibold mb-2">{item.title}</CardTitle>
-                <CardDescription>{item.description}</CardDescription>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="why-us" className="py-16 px-4 bg-muted/30">
+      <section id="why-us" className="py-16 px-4">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-4 text-primary">Pilihan Cerdas untuk Setiap Perjalanan Anda</h2>
           <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
@@ -169,7 +169,7 @@ export default async function LandingPage() {
       </section>
 
       {galleries && galleries.length > 0 && (
-        <section id="gallery" className="py-16 px-4">
+        <section id="gallery" className="py-16 px-4 bg-muted/30">
           <div className="container mx-auto">
             <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><Images className="mr-3 h-10 w-10" /> Galeri</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -195,7 +195,7 @@ export default async function LandingPage() {
       )}
 
       {testimonis && testimonis.length > 0 && (
-        <section id="testimonials" className="py-16 px-4 bg-muted/30">
+        <section id="testimonials" className="py-16 px-4">
           <div className="container mx-auto">
             <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><Users className="mr-3 h-10 w-10" /> Kata Pelanggan Kami</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -223,7 +223,7 @@ export default async function LandingPage() {
       )}
 
       {faqs && faqs.length > 0 && (
-        <section id="faq" className="py-16 px-4">
+        <section id="faq" className="py-16 px-4 bg-muted/30">
           <div className="container mx-auto max-w-3xl">
             <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><HelpCircle className="mr-3 h-10 w-10" /> Pertanyaan Umum</h2>
             <Accordion type="single" collapsible className="w-full">
