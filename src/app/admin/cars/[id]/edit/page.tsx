@@ -66,6 +66,7 @@ export default function EditCarPage() {
     formData.append('status', values.status);
     formData.append('price', String(values.price));
 
+    // Ensure nullable fields are sent as empty strings if null/undefined
     formData.append('plat_number', values.plat_number || '');
     formData.append('description', values.description || '');
     
