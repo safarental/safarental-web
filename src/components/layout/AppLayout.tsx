@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import AppHeader from './AppHeader';
-import { Loader2, Building, LayoutDashboard, UserCircle, Car } from 'lucide-react'; // Added Car icon
+import { Loader2, Building, LayoutDashboard, UserCircle, Car, ImageIcon as ImageIconLucide } from 'lucide-react'; // Added ImageIcon
 import {
   SidebarProvider,
   Sidebar,
@@ -66,7 +66,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem> {/* Mobil Menu Item */}
+            <SidebarMenuItem> 
               <SidebarMenuButton
                 asChild
                 isActive={pathname.startsWith('/admin/cars')}
@@ -75,6 +75,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <Link href="/admin/cars">
                   <Car />
                   <span>Cars</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem> {/* Gallery Menu Item */}
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith('/admin/galleries')}
+                tooltip={{ children: "Galleries", side: "right", align: "center" }}
+              >
+                <Link href="/admin/galleries">
+                  <ImageIconLucide />
+                  <span>Galleries</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
