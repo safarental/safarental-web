@@ -1,6 +1,14 @@
+
+# Allow all crawlers full access to public pages
 User-agent: *
 Allow: /
+Allow: /mobil
+Allow: /about-us
+Allow: /sitemap.xml
+
+# Disallow access to admin and API routes
 Disallow: /admin/
 Disallow: /api/
 
+# Sitemap location
 Sitemap: https://safarental.com/sitemap.xml

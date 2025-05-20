@@ -11,7 +11,40 @@ import { GallerySection } from '@/components/landing/GallerySection';
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
 import { ChevronRight, Car as CarIconLucide, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles } from 'lucide-react';
 import PublicPageLayout from '@/components/layout/PublicPageLayout';
-import { getPublicStorageUrl } from '@/lib/imageUtils'; 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sewa & Rental Mobil Terbaik di Kalimantan | Safarental',
+  description: 'Sewa mobil murah, aman, dan terpercaya di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Armada lengkap dan layanan prima dari Safarental.',
+  keywords: ['rental mobil kalimantan', 'sewa mobil kalimantan', 'rental mobil banjarmasin', 'sewa mobil banjarmasin', 'rental mobil palangkaraya', 'sewa mobil palangkaraya', 'rental mobil balikpapan', 'sewa mobil balikpapan', 'rental mobil paser', 'sewa mobil paser', 'safarental', 'rental mobil murah', 'sewa mobil terpercaya'],
+  metadataBase: new URL('https://safarental.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Sewa & Rental Mobil Terbaik di Kalimantan | Safarental',
+    description: 'Sewa mobil murah, aman, dan terpercaya di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Armada lengkap dan layanan prima dari Safarental.',
+    url: 'https://safarental.com',
+    siteName: 'Safarental',
+    // images: [ // Optional: Add images for Open Graph
+    //   {
+    //     url: 'https://safarental.com/og-image.png', // Must be an absolute URL
+    //     width: 800,
+    //     height: 600,
+    //     alt: 'Safarental - Rental Mobil Terbaik',
+    //   },
+    // ],
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: { // Optional: Add Twitter card data
+    card: 'summary_large_image',
+    title: 'Sewa & Rental Mobil Terbaik di Kalimantan | Safarental',
+    description: 'Sewa mobil murah, aman, dan terpercaya di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Armada lengkap dan layanan prima dari Safarental.',
+    // images: ['https://safarental.com/twitter-image.png'], // Must be an absolute URL
+  },
+};
+
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
   try {
