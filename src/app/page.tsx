@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { CarListSection } from '@/components/landing/CarListSection'; 
-import { getPublicStorageUrl } from '@/lib/imageUtils'; // Added import
+import { getPublicStorageUrl } from '@/lib/imageUtils';
 import { Mail, MapPin, MessageCircle as MessageCircleIcon, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles } from 'lucide-react';
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
@@ -19,7 +19,6 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     }
     const responseData: LandingPageApiResponse = await response.json();
     
-    // Provide default values if API returns null for certain meta_web fields
     if (!responseData.meta_web) {
       responseData.meta_web = {
         website_name: "Rental Mobil Kami",
@@ -145,7 +144,10 @@ export default async function LandingPage() {
       {galleries && galleries.length > 0 && (
         <section id="gallery" className="py-16 px-4 bg-muted/30">
           <div className="container mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><Images className="mr-3 h-10 w-10" /> Galeri Kami</h2>
+            <h2 className="text-4xl font-bold text-center mb-4 text-primary flex items-center justify-center"><Images className="mr-3 h-10 w-10" /> Galeri Kami</h2>
+            <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
+              Intip momen-momen perjalanan tak terlupakan bersama armada kami. Dari petualangan seru hingga kenyamanan keluarga, biarkan galeri ini menginspirasi perjalanan Anda berikutnya.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {galleries.map((item) => (
                 <div key={item.id} className="relative aspect-square overflow-hidden rounded-lg shadow-lg group">
