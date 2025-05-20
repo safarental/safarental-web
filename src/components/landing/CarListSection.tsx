@@ -65,9 +65,12 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
   return (
     <section id="cars" className="py-16 px-4 bg-muted/30">
       <div className="container mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center">
+        <h2 className="text-4xl font-bold text-center mb-4 text-primary flex items-center justify-center">
           <CarIcon className="mr-3 h-10 w-10" /> Armada Pilihan Kami
         </h2>
+        <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
+          Temukan kendaraan impian Anda dari koleksi terbaik kami. Setiap mobil dirawat dengan standar tertinggi untuk kenyamanan dan keamanan perjalanan Anda, apapun tujuannya.
+        </p>
         {mobils && mobils.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {mobils.map((mobil) => (
