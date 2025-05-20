@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -14,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 
 export default function AppHeader() {
@@ -34,12 +36,16 @@ export default function AppHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"> {/* z-index adjusted for sidebar */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
-        <Link href="/admin/dashboard" className="flex items-center gap-2">
-          <Building className="h-7 w-7 text-primary" />
-          <span className="text-xl font-bold text-primary">Adminify</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <SidebarTrigger className="mr-2 md:hidden" /> {/* Trigger for mobile, hidden on md+ */}
+           {/* Desktop sidebar is toggled by its rail or keyboard shortcut, so the trigger can be hidden on desktop if preferred */}
+          <Link href="/admin/dashboard" className="flex items-center gap-2">
+            <Building className="h-7 w-7 text-primary" />
+            <span className="text-xl font-bold text-primary">Adminify</span>
+          </Link>
+        </div>
         
         <nav className="flex items-center gap-4">
            <Button variant="ghost" onClick={() => router.push('/admin/dashboard')} className="hidden sm:flex items-center gap-2">
@@ -54,7 +60,7 @@ export default function AppHeader() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src={`https://placehold.co/100x100.png?text=${getInitials(user.name)}`} alt={user.name} data-ai-hint="placeholder avatar" />
+                    <AvatarImage src={`https://placehold.co/100x100.png?text=${getInitials(user.name)}`} alt={user.name || 'User Avatar'} data-ai-hint="placeholder avatar" />
                     <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                   </Avatar>
                 </Button>
