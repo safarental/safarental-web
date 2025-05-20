@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -47,7 +48,7 @@ export default function DashboardPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-8">
+      <div className="max-w-6xl mx-auto space-y-8">
         <h1 className="text-3xl font-bold tracking-tight">Welcome, {displayName}!</h1>
         
         {isLoading && (
