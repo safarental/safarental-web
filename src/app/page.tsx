@@ -5,21 +5,21 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { CarListSection } from '@/components/landing/CarListSection'; 
+import { CarListSection } from '@/components/landing/CarListSection';
 import { FeedbackForm } from '@/components/landing/FeedbackForm';
 import { getPublicStorageUrl } from '@/lib/imageUtils';
 import { Mail, MapPin, MessageCircle as MessageCircleIcon, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles, MessageSquare } from 'lucide-react';
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/home`, { next: { revalidate: 3600 } }); 
+    const response = await fetch(`${API_BASE_URL}/home`, { next: { revalidate: 3600 } });
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Gagal memuat data landing page:", response.status, errorText);
       return null;
     }
     const responseData: LandingPageApiResponse = await response.json();
-    
+
     if (!responseData.meta_web) {
       responseData.meta_web = {
         website_name: "Rental Mobil Kami",
@@ -37,7 +37,7 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     if (responseData.mobils) {
       responseData.mobils = responseData.mobils.map((mobil) => ({
         ...mobil,
-        price: String(mobil.price) 
+        price: String(mobil.price)
       }));
     }
     return responseData;
@@ -67,12 +67,12 @@ export default async function LandingPage() {
 
   const renderStars = (rating: number) => {
     const totalStars = 5;
-    const fullStars = Math.max(0, Math.min(totalStars, Math.round(rating))); 
+    const fullStars = Math.max(0, Math.min(totalStars, Math.round(rating)));
     return Array(totalStars).fill(0).map((_, i) => (
       <Star key={i} className={`w-5 h-5 ${i < fullStars ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
     ));
   };
-  
+
   const websiteName = meta_web?.website_name || "Rental Mobil Kami";
 
 
@@ -154,21 +154,31 @@ export default async function LandingPage() {
             <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
               Intip momen-momen perjalanan tak terlupakan bersama armada kami. Dari petualangan seru hingga kenyamanan keluarga, biarkan galeri ini menginspirasi perjalanan Anda berikutnya.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {galleries.map((item) => (
-                <div key={item.id} className="relative aspect-square overflow-hidden rounded-lg shadow-lg group">
-                  <img 
-                    src={getPublicStorageUrl(item.picture_upload) || `https://placehold.co/400x400.png`}
-                    alt={item.title || 'Gambar galeri'}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    data-ai-hint="activity travel"
-                  />
-                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center">
-                    <h3 className="text-lg font-semibold text-white mb-1">{item.title}</h3>
-                    {item.description && <p className="text-sm text-gray-200">{item.description}</p>}
+            <div className="mt-8">
+              <div className="
+                flex overflow-x-auto space-x-4 pb-4 
+                sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-4 sm:space-x-0 sm:pb-0 sm:overflow-visible
+              ">
+                {galleries.map((item) => (
+                  <div
+                    key={item.id}
+                    className="
+                      flex-shrink-0 w-48 rounded-lg shadow-lg group relative aspect-square overflow-hidden
+                      sm:w-full sm:flex-shrink"
+                  >
+                    <img
+                      src={getPublicStorageUrl(item.picture_upload) || `https://placehold.co/400x400.png`}
+                      alt={item.title || 'Gambar galeri'}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      data-ai-hint="activity travel"
+                    />
+                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center">
+                      <h3 className="text-lg font-semibold text-white mb-1">{item.title}</h3>
+                      {item.description && <p className="text-sm text-gray-200">{item.description}</p>}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -276,5 +286,3 @@ export default async function LandingPage() {
     </div>
   );
 }
-
-    
