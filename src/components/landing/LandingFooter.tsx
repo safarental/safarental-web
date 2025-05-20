@@ -1,7 +1,9 @@
 
+"use client";
+
 import type { MetaWebLanding } from '@/types/LandingPageData';
 import { Mail, MapPin, Instagram, MessageSquare } from 'lucide-react';
-import { cn } from '@/lib/utils'; // Added import
+import { cn } from '@/lib/utils';
 
 interface LandingFooterProps {
   meta_web: MetaWebLanding | null;
@@ -14,7 +16,7 @@ export function LandingFooter({ meta_web, websiteName = "Nama Website Anda" }: L
       <div className="container mx-auto text-center md:text-left">
         <div className={cn(
             "grid grid-cols-1 gap-8 items-center",
-            meta_web ? "md:grid-cols-3" : "md:grid-cols-1"
+            meta_web ? "md:grid-cols-3" : "md:grid-cols-1" // Adjusted grid based on meta_web presence
           )}
         >
           <div className={!meta_web ? "md:col-span-3 md:text-center" : ""}>
