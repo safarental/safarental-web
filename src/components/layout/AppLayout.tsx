@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import AppHeader from './AppHeader';
-import { Loader2, Building, LayoutDashboard, UserCircle, Car, ImageIcon as ImageIconLucide, Settings } from 'lucide-react'; // Added Settings icon
+import { Loader2, Building, LayoutDashboard, UserCircle, Car, ImageIcon as ImageIconLucide, Settings, HelpCircle } from 'lucide-react'; // Added Settings, HelpCircle icons
 import {
   SidebarProvider,
   Sidebar,
@@ -99,6 +99,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <Link href="/admin/meta-web">
                   <Settings />
                   <span>Meta Website</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith('/admin/faqs')}
+                tooltip={{ children: "FAQs", side: "right", align: "center" }}
+              >
+                <Link href="/admin/faqs">
+                  <HelpCircle />
+                  <span>FAQs</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
