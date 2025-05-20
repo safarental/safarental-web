@@ -28,7 +28,7 @@ export interface PaginatedCarsResponse {
   message: string;
   data: {
     current_page: number;
-    data: Mobil[]; // Mobil di sini akan memiliki price sebagai string jika digunakan untuk list API yang mengembalikan string
+    data: Mobil[];
     first_page_url: string;
     from: number;
     last_page: number;
@@ -45,6 +45,9 @@ export interface PaginatedCarsResponse {
 
 export interface MobilDetailResponse {
     message: string;
-    data: Mobil; // Mobil di sini akan memiliki price sebagai string
+    data: Mobil;
 }
 
+export interface PublicListMobilResponse {
+  mobils: Mobil[];
+}

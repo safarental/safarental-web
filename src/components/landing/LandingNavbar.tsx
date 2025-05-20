@@ -14,7 +14,8 @@ interface LandingNavbarProps {
 // Navigation links for the landing page
 const navLinks = [
   { href: '/', label: 'Beranda' },
-  { href: '/#cars', label: 'Armada' },
+  { href: '/#cars', label: 'Armada Unggulan' },
+  { href: '/mobil', label: 'Semua Mobil'}, // Link baru
   { href: '/#gallery', label: 'Galeri' },
   { href: '/#faq', label: 'FAQ' },
 ];
@@ -28,7 +29,7 @@ export function LandingNavbar({ websiteName }: LandingNavbarProps) {
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center gap-2">
             <Building className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold text-primary">{websiteName || 'Nama Website'}</span>
+            <span className="text-xl font-bold text-primary">{websiteName || 'Safarental'}</span>
           </Link>
 
           {/* Desktop Menu */}
@@ -38,11 +39,11 @@ export function LandingNavbar({ websiteName }: LandingNavbarProps) {
                 key={link.label}
                 href={link.href}
                 className={cn("text-foreground hover:text-primary transition-colors font-medium")}
+                onClick={() => setIsMobileMenuOpen(false)} // Tutup menu saat link diklik
               >
                 {link.label}
               </Link>
             ))}
-            {/* Tombol Masuk Admin dihapus dari sini */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -73,7 +74,6 @@ export function LandingNavbar({ websiteName }: LandingNavbarProps) {
                 {link.label}
               </Link>
             ))}
-            {/* Tombol Masuk Admin dihapus dari sini */}
           </div>
         </div>
       )}
