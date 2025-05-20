@@ -4,6 +4,38 @@ import type { MetaWeb } from '@/types/metaWeb';
 import { API_BASE_URL } from '@/config';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building, Info, Mail, MapPin, Phone, Globe, Users, Eye, Award, MessageSquare, Instagram, Facebook, ServerCrash, Smartphone } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Tentang Kami - Profil Safarental, Penyedia Rental Mobil Terpercaya',
+  description: 'Kenali lebih dekat Safarental, visi, misi, dan komitmen kami dalam menyediakan layanan sewa mobil terbaik dan terpercaya di Kalimantan.',
+  keywords: ['tentang safarental', 'profil perusahaan rental mobil kalimantan', 'visi misi safarental', 'kontak safarental', 'rental mobil terpercaya kalimantan', 'safarental kalimantan'],
+  alternates: {
+    canonical: '/about-us',
+  },
+  openGraph: {
+    title: 'Tentang Kami - Profil Safarental, Penyedia Rental Mobil Terpercaya',
+    description: 'Kenali lebih dekat Safarental, visi, misi, dan komitmen kami dalam menyediakan layanan sewa mobil terbaik dan terpercaya di Kalimantan.',
+    url: 'https://safarental.com/about-us',
+    siteName: 'Safarental',
+    // images: [ // Tambahkan gambar representatif jika ada
+    //   {
+    //     url: 'https://safarental.com/og-about.png',
+    //     width: 1200,
+    //     height: 630,
+    //     alt: 'Tentang Safarental',
+    //   },
+    // ],
+    locale: 'id_ID',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Tentang Kami - Profil Safarental, Penyedia Rental Mobil Terpercaya',
+    description: 'Kenali lebih dekat Safarental, visi, misi, dan komitmen kami dalam menyediakan layanan sewa mobil terbaik dan terpercaya di Kalimantan.',
+    // images: ['https://safarental.com/twitter-about.png'],
+  },
+};
 
 interface AboutUsApiResponse {
   message: string;
