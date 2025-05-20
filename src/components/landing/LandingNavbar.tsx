@@ -15,6 +15,7 @@ interface LandingNavbarProps {
 const navLinks = [
   { href: '/', label: 'Beranda' },
   { href: '/mobil', label: 'Semua Mobil'},
+  { href: '/about-us', label: 'Tentang Kami' },
   { href: '/#faq', label: 'FAQ' },
 ];
 
