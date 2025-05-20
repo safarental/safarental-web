@@ -1,6 +1,7 @@
 
 import type { MetaWebLanding } from '@/types/LandingPageData';
 import { Mail, MapPin, Instagram, MessageSquare } from 'lucide-react';
+import { cn } from '@/lib/utils'; // Added import
 
 interface LandingFooterProps {
   meta_web: MetaWebLanding | null;
