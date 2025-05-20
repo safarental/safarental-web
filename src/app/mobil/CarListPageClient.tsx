@@ -288,7 +288,7 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
       {!isLoading && !error && cars.length > 0 && (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {currentItems.map((mobil) => (
+            {currentItems.map((mobil, index) => (
               <Card key={mobil.id} className="flex flex-col md:flex-row overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div className="w-full md:w-2/5 h-56 md:h-auto relative flex-shrink-0 bg-muted/50">
                   <Image
@@ -298,6 +298,8 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
                     objectFit="contain"
                     className="p-2 md:p-3"
                     data-ai-hint={`${mobil.category} car`}
+                    priority={index < 2} // Prioritaskan 2 gambar pertama
+                    sizes="(max-width: 767px) 90vw, (max-width: 1023px) 40vw, 20vw"
                   />
                 </div>
                 <div className="flex flex-col flex-1 p-4 justify-between">
@@ -378,6 +380,7 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
                     objectFit="contain"
                     className="p-2"
                     data-ai-hint={`${selectedCar.category} detail`}
+                    sizes="(max-width: 767px) 90vw, 40vw"
                   />
                 </div>
                 <div className="md:w-3/5 flex flex-col">
@@ -416,5 +419,4 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
     </div>
   );
 }
-
     

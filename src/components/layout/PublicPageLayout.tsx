@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 async function getGlobalMetaWeb(): Promise<MetaWebLanding | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/home`, { cache: 'no-store' });
+    const response = await fetch(`${API_BASE_URL}/home`, { next: { revalidate: 3600 } }); // Revalidate every hour
     if (!response.ok) {
       console.error("Gagal memuat data meta_web global:", response.status, await response.text());
       return null;

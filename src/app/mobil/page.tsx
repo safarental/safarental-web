@@ -4,43 +4,12 @@ import CarListPageClient from './CarListPageClient';
 import type { MetaWebLanding, LandingPageApiResponse } from '@/types/LandingPageData';
 import { API_BASE_URL } from '@/config';
 import { ServerCrash } from 'lucide-react';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Daftar Mobil Sewa & Rental - Armada Lengkap Kalimantan | Safarental',
-  description: 'Jelajahi semua pilihan mobil sewa dan rental kami di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Temukan MPV, SUV, Hatchback, dan lainnya dengan harga terbaik dari Safarental.',
-  keywords: ['daftar mobil safarental', 'semua mobil safarental', 'armada rental kalimantan', 'pilihan mobil sewa kalimantan', 'rental mobil banjarmasin', 'sewa mobil palangkaraya', 'rental mobil balikpapan', 'sewa mobil paser', 'safarental'],
-  alternates: {
-    canonical: '/mobil',
-  },
-  openGraph: {
-    title: 'Daftar Mobil Sewa & Rental - Armada Lengkap Kalimantan | Safarental',
-    description: 'Jelajahi semua pilihan mobil sewa dan rental kami di Kalimantan. Temukan MPV, SUV, Hatchback, dan lainnya dengan harga terbaik dari Safarental.',
-    url: 'https://safarental.com/mobil',
-    siteName: 'Safarental',
-    // images: [ // Tambahkan gambar representatif jika ada
-    //   {
-    //     url: 'https://safarental.com/og-mobil.png',
-    //     width: 1200,
-    //     height: 630,
-    //     alt: 'Armada Lengkap Safarental',
-    //   },
-    // ],
-    locale: 'id_ID',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Daftar Mobil Sewa & Rental - Armada Lengkap Kalimantan | Safarental',
-    description: 'Jelajahi semua pilihan mobil sewa dan rental kami di Kalimantan. Temukan MPV, SUV, Hatchback, dan lainnya dengan harga terbaik dari Safarental.',
-    // images: ['https://safarental.com/twitter-mobil.png'],
-  },
-};
+import type { Metadata, ResolvingMetadata } from 'next';
 
 async function getMetaWebForCarList(): Promise<MetaWebLanding | null> {
   try {
     // Mengambil dari endpoint /home karena API /list-mobil tidak menyertakan meta_web
-    const response = await fetch(`${API_BASE_URL}/home`, { cache: 'no-store' });
+    const response = await fetch(`${API_BASE_URL}/home`, { next: { revalidate: 3600 } }); // Revalidate every hour
     if (!response.ok) {
       console.error("Gagal memuat data meta_web untuk daftar mobil:", response.status, await response.text());
       return null;
@@ -73,6 +42,49 @@ async function getMetaWebForCarList(): Promise<MetaWebLanding | null> {
       email: null
     };
   }
+}
+
+export async function generateMetadata(
+  props: {},
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const metaWeb = await getMetaWebForCarList();
+  const websiteName = metaWeb?.website_name || "Safarental";
+  const defaultDescription = `Jelajahi semua pilihan mobil sewa dan rental kami di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Temukan MPV, SUV, Hatchback, dan lainnya dengan harga terbaik dari ${websiteName}.`;
+
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: `Daftar Mobil Sewa & Rental - Armada Lengkap Kalimantan | ${websiteName}`,
+    description: defaultDescription,
+    keywords: ['daftar mobil ' + websiteName.toLowerCase(), 'semua mobil ' + websiteName.toLowerCase(), 'armada rental kalimantan', 'pilihan mobil sewa kalimantan', 'rental mobil banjarmasin', 'sewa mobil palangkaraya', 'rental mobil balikpapan', 'sewa mobil paser', websiteName.toLowerCase()],
+    alternates: {
+      canonical: '/mobil',
+    },
+    openGraph: {
+      title: `Daftar Mobil Sewa & Rental - Armada Lengkap Kalimantan | ${websiteName}`,
+      description: defaultDescription,
+      url: 'https://safarental.com/mobil',
+      siteName: websiteName,
+      // images: [
+      //   {
+      //     url: 'https://safarental.com/og-mobil.png',
+      //     width: 1200,
+      //     height: 630,
+      //     alt: `Armada Lengkap ${websiteName}`,
+      //   },
+      //   ...previousImages,
+      // ],
+      locale: 'id_ID',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Daftar Mobil Sewa & Rental - Armada Lengkap Kalimantan | ${websiteName}`,
+      description: defaultDescription,
+      // images: ['https://safarental.com/twitter-mobil.png'],
+    },
+  };
 }
 
 

@@ -1,50 +1,14 @@
 
 import PublicPageLayout from '@/components/layout/PublicPageLayout';
-import type { MetaWeb } from '@/types/metaWeb';
+import type { MetaWeb, MetaWebResponse } from '@/types/metaWeb';
 import { API_BASE_URL } from '@/config';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building, Info, Mail, MapPin, Phone, Globe, Users, Eye, Award, MessageSquare, Instagram, Facebook, ServerCrash, Smartphone } from 'lucide-react';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Tentang Kami - Profil Safarental, Penyedia Rental Mobil Terpercaya',
-  description: 'Kenali lebih dekat Safarental, visi, misi, dan komitmen kami dalam menyediakan layanan sewa mobil terbaik dan terpercaya di Kalimantan.',
-  keywords: ['tentang safarental', 'profil perusahaan rental mobil kalimantan', 'visi misi safarental', 'kontak safarental', 'rental mobil terpercaya kalimantan', 'safarental kalimantan'],
-  alternates: {
-    canonical: '/about-us',
-  },
-  openGraph: {
-    title: 'Tentang Kami - Profil Safarental, Penyedia Rental Mobil Terpercaya',
-    description: 'Kenali lebih dekat Safarental, visi, misi, dan komitmen kami dalam menyediakan layanan sewa mobil terbaik dan terpercaya di Kalimantan.',
-    url: 'https://safarental.com/about-us',
-    siteName: 'Safarental',
-    // images: [ // Tambahkan gambar representatif jika ada
-    //   {
-    //     url: 'https://safarental.com/og-about.png',
-    //     width: 1200,
-    //     height: 630,
-    //     alt: 'Tentang Safarental',
-    //   },
-    // ],
-    locale: 'id_ID',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Tentang Kami - Profil Safarental, Penyedia Rental Mobil Terpercaya',
-    description: 'Kenali lebih dekat Safarental, visi, misi, dan komitmen kami dalam menyediakan layanan sewa mobil terbaik dan terpercaya di Kalimantan.',
-    // images: ['https://safarental.com/twitter-about.png'],
-  },
-};
-
-interface AboutUsApiResponse {
-  message: string;
-  data: MetaWeb | null;
-}
+import type { Metadata, ResolvingMetadata } from 'next';
 
 async function getAboutUsData(): Promise<MetaWeb | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/about-us`, { cache: 'no-store' });
+    const response = await fetch(`${API_BASE_URL}/about-us`, { next: { revalidate: 3600 } }); // Revalidate every hour
     if (!response.ok) {
       if (response.status === 404) {
         console.warn("Data MetaWeb untuk 'Tentang Kami' tidak ditemukan (404).");
@@ -54,13 +18,58 @@ async function getAboutUsData(): Promise<MetaWeb | null> {
       console.error("Gagal memuat data 'Tentang Kami':", response.status, errorText);
       return null;
     }
-    const result: AboutUsApiResponse = await response.json();
+    const result: MetaWebResponse = await response.json();
     return result.data;
   } catch (error) {
     console.error("Error saat memuat data 'Tentang Kami':", error);
     return null;
   }
 }
+
+export async function generateMetadata(
+  props: {},
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const metaWeb = await getAboutUsData();
+  const websiteName = metaWeb?.website_name || "Safarental";
+  const defaultDescription = `Kenali lebih dekat ${websiteName}, visi, misi, dan komitmen kami dalam menyediakan layanan sewa mobil terbaik dan terpercaya di Kalimantan.`;
+  const pageDescription = metaWeb?.description || defaultDescription;
+
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: `Tentang Kami - Profil ${websiteName}, Penyedia Rental Mobil Terpercaya`,
+    description: pageDescription,
+    keywords: [`tentang ${websiteName.toLowerCase()}`, `profil perusahaan rental mobil kalimantan`, `visi misi ${websiteName.toLowerCase()}`, `kontak ${websiteName.toLowerCase()}`, 'rental mobil terpercaya kalimantan', `${websiteName.toLowerCase()} kalimantan`],
+    alternates: {
+      canonical: '/about-us',
+    },
+    openGraph: {
+      title: `Tentang Kami - Profil ${websiteName}, Penyedia Rental Mobil Terpercaya`,
+      description: pageDescription,
+      url: 'https://safarental.com/about-us',
+      siteName: websiteName,
+      // images: [
+      //   {
+      //     url: 'https://safarental.com/og-about.png',
+      //     width: 1200,
+      //     height: 630,
+      //     alt: `Tentang ${websiteName}`,
+      //   },
+      //   ...previousImages,
+      // ],
+      locale: 'id_ID',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Tentang Kami - Profil ${websiteName}, Penyedia Rental Mobil Terpercaya`,
+      description: pageDescription,
+      // images: ['https://safarental.com/twitter-about.png'],
+    },
+  };
+}
+
 
 const DetailItem = ({ icon: Icon, label, value, href }: { icon: React.ElementType, label: string, value: string | null | undefined, href?: string }) => {
   if (!value) return null;

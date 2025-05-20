@@ -1,5 +1,5 @@
 
-import type { LandingPageApiResponse } from '@/types/LandingPageData';
+import type { LandingPageApiResponse, MetaWebLanding } from '@/types/LandingPageData';
 import { API_BASE_URL } from '@/config';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -11,44 +11,12 @@ import { GallerySection } from '@/components/landing/GallerySection';
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
 import { ChevronRight, Car as CarIconLucide, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles } from 'lucide-react';
 import PublicPageLayout from '@/components/layout/PublicPageLayout';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Sewa & Rental Mobil Terbaik di Kalimantan | Safarental',
-  description: 'Sewa mobil murah, aman, dan terpercaya di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Armada lengkap dan layanan prima dari Safarental.',
-  keywords: ['rental mobil kalimantan', 'sewa mobil kalimantan', 'rental mobil banjarmasin', 'sewa mobil banjarmasin', 'rental mobil palangkaraya', 'sewa mobil palangkaraya', 'rental mobil balikpapan', 'sewa mobil balikpapan', 'rental mobil paser', 'sewa mobil paser', 'safarental', 'rental mobil murah', 'sewa mobil terpercaya'],
-  metadataBase: new URL('https://safarental.com'),
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    title: 'Sewa & Rental Mobil Terbaik di Kalimantan | Safarental',
-    description: 'Sewa mobil murah, aman, dan terpercaya di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Armada lengkap dan layanan prima dari Safarental.',
-    url: 'https://safarental.com',
-    siteName: 'Safarental',
-    // images: [ // Disarankan untuk menambahkan URL gambar absolut di sini
-    //   {
-    //     url: 'https://safarental.com/og-image.png', 
-    //     width: 1200,
-    //     height: 630,
-    //     alt: 'Safarental - Rental Mobil Terbaik di Kalimantan',
-    //   },
-    // ],
-    locale: 'id_ID',
-    type: 'website',
-  },
-  twitter: { 
-    card: 'summary_large_image', // Gunakan 'summary' jika tidak ada gambar utama yang besar
-    title: 'Sewa & Rental Mobil Terbaik di Kalimantan | Safarental',
-    description: 'Sewa mobil murah, aman, dan terpercaya di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Armada lengkap dan layanan prima dari Safarental.',
-    // images: ['https://safarental.com/twitter-image.png'], // URL absolut ke gambar untuk Twitter
-  },
-};
-
-
+// Fungsi untuk mengambil data dengan revalidasi
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/home`, { cache: 'no-store' }); 
+    const response = await fetch(`${API_BASE_URL}/home`, { next: { revalidate: 3600 } }); // Revalidate every hour
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Gagal memuat data landing page:", response.status, errorText);
@@ -56,7 +24,7 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     }
     const responseData: LandingPageApiResponse = await response.json();
 
-    const metaWebDefaults = {
+    const metaWebDefaults: MetaWebLanding = {
       website_name: "Safarental",
       description: "Solusi rental mobil terbaik dengan armada premium dan layanan prima.",
       whatsapp: null,
@@ -89,6 +57,81 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     return null;
   }
 }
+
+export async function generateMetadata(
+  props: {},
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const data = await getLandingPageData();
+  const websiteName = data?.meta_web?.website_name || "Safarental";
+  const defaultDescription = `Sewa mobil murah, aman, dan terpercaya di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Armada lengkap dan layanan prima dari ${websiteName}.`;
+  const pageDescription = data?.meta_web?.description || defaultDescription;
+
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: `Sewa & Rental Mobil Terbaik di Kalimantan | ${websiteName}`,
+    description: pageDescription,
+    keywords: ['rental mobil kalimantan', 'sewa mobil kalimantan', 'rental mobil banjarmasin', 'sewa mobil banjarmasin', 'rental mobil palangkaraya', 'sewa mobil palangkaraya', 'rental mobil balikpapan', 'sewa mobil balikpapan', 'rental mobil paser', 'sewa mobil paser', websiteName.toLowerCase(), 'rental mobil murah', 'sewa mobil terpercaya'],
+    metadataBase: new URL('https://safarental.com'),
+    alternates: {
+      canonical: '/',
+    },
+    openGraph: {
+      title: `Sewa & Rental Mobil Terbaik di Kalimantan | ${websiteName}`,
+      description: pageDescription,
+      url: 'https://safarental.com',
+      siteName: websiteName,
+      images: [
+        // {
+        //   url: 'https://safarental.com/og-image.png', 
+        //   width: 1200,
+        //   height: 630,
+        //   alt: `${websiteName} - Rental Mobil Terbaik di Kalimantan`,
+        // },
+        ...previousImages,
+      ],
+      locale: 'id_ID',
+      type: 'website',
+    },
+    twitter: { 
+      card: 'summary_large_image',
+      title: `Sewa & Rental Mobil Terbaik di Kalimantan | ${websiteName}`,
+      description: pageDescription,
+      // images: ['https://safarental.com/twitter-image.png'],
+    },
+    // Structured data
+    other: {
+      "application/ld+json": JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CarRental",
+        "name": websiteName,
+        "description": pageDescription,
+        "url": "https://safarental.com",
+        ...(data?.meta_web?.whatsapp && {"telephone": data.meta_web.whatsapp.replace(/\D/g, '')}),
+        ...(data?.meta_web?.address && {"address": {
+          "@type": "PostalAddress",
+          "streetAddress": data.meta_web.address,
+          // "addressLocality": "Kota", // Anda bisa tambahkan ini jika ada
+          // "addressRegion": "Provinsi", // Anda bisa tambahkan ini jika ada
+          // "postalCode": "KodePos", // Anda bisa tambahkan ini jika ada
+          "addressCountry": "ID"
+        }}),
+        "areaServed": [
+          {"@type": "Place", "name": "Kalimantan"},
+          {"@type": "Place", "name": "Banjarmasin"},
+          {"@type": "Place", "name": "Palangkaraya"},
+          {"@type": "Place", "name": "Balikpapan"},
+          {"@type": "Place", "name": "Paser"}
+        ],
+        "image": "https://safarental.com/og-image.png", // Ganti dengan URL gambar utama Anda
+        "priceRange": "Rp", // Atau sesuaikan
+        "hasMap": "https://maps.google.com/?q=" + encodeURIComponent(data?.meta_web?.address || websiteName) // Contoh link peta
+      })
+    }
+  };
+}
+
 
 export default async function HomePage() {
   const data = await getLandingPageData();
@@ -242,5 +285,4 @@ export default async function HomePage() {
     </PublicPageLayout>
   );
 }
-
     
