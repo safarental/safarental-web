@@ -75,30 +75,15 @@ export default function EditCarPage() {
     }
     // If no new picture is uploaded, the Laravel backend will keep the old one.
 
-    // Laravel handles PUT with FormData if _method field is sent with POST
-    // However, many modern servers support PUT with FormData directly.
-    // Let's try direct PUT first. If issues, switch to POST + _method: 'PUT'.
-    // formData.append('_method', 'PUT'); // if using POST to simulate PUT
+    // For file uploads with PUT/PATCH, Laravel expects a POST request with a _method field.
+    formData.append('_method', 'PUT');
 
     try {
       const response = await fetchWithAuth(`${API_BASE_URL}/admin/mobils/${carId}`, {
         method: 'POST', // Use POST when sending FormData with _method for PUT/PATCH
         body: formData,
       });
-      // If your server DIRECTLY supports PUT with FormData:
-      // method: 'PUT',
-      // body: formData,
-
-      // The controller is `Route::put`, so let's assume it can handle PUT with FormData.
-      // If not, the above POST + _method approach is the fallback.
-      // Re-checking the Laravel controller and route definition:
-      // `Route::put('/mobils/{id}', [MobilController::class, 'update']);`
-      // `public function update(Request $request, $id)`
-      // This setup usually means Laravel expects a true PUT request or POST with _method.
-      // For file uploads, POST with _method is more common. So we append _method to formData.
-      formData.append('_method', 'PUT');
-
-
+      
       const data = await response.json();
 
       if (!response.ok) {
