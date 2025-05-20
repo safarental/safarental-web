@@ -76,6 +76,7 @@ export default function EditCarPage() {
     // If no new picture is uploaded, the Laravel backend will keep the old one.
 
     // For file uploads with PUT/PATCH, Laravel expects a POST request with a _method field.
+    // Ensure _method is appended before making the fetch call.
     formData.append('_method', 'PUT');
 
     try {
