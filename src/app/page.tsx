@@ -14,6 +14,7 @@ import PublicPageLayout from '@/components/layout/PublicPageLayout';
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
   try {
+    // Tambahkan { cache: 'no-store' } untuk memastikan data selalu baru
     const response = await fetch(`${API_BASE_URL}/home`, { cache: 'no-store' }); 
     if (!response.ok) {
       const errorText = await response.text();
@@ -22,10 +23,11 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     }
     const responseData: LandingPageApiResponse = await response.json();
 
+    // Fallback untuk meta_web jika tidak ada atau beberapa field kosong
     if (!responseData.meta_web) {
       responseData.meta_web = {
-        website_name: "Rental Mobil Kami",
-        description: "Deskripsi default jika tidak ada dari API.",
+        website_name: "Rental Mobil Impian", // Nama default yang lebih menarik
+        description: "Solusi rental mobil terbaik dengan armada premium dan layanan prima.", // Deskripsi default
         whatsapp: null,
         instagram: null,
         address: null,
@@ -33,17 +35,18 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
       };
     } else {
        if (!responseData.meta_web.website_name) {
-          responseData.meta_web.website_name = "Rental Mobil Kami";
+          responseData.meta_web.website_name = "Rental Mobil Impian";
       }
        if (!responseData.meta_web.description) {
-          responseData.meta_web.description = "Deskripsi default jika tidak ada dari API.";
+          responseData.meta_web.description = "Solusi rental mobil terbaik dengan armada premium dan layanan prima.";
       }
     }
     
+    // Pastikan harga mobil adalah string
     if (responseData.mobils) {
       responseData.mobils = responseData.mobils.map((mobil) => ({
         ...mobil,
-        price: String(mobil.price) 
+        price: String(mobil.price) // API mengembalikan harga sebagai string
       }));
     }
 
@@ -64,28 +67,28 @@ export default async function HomePage() {
           <ServerCrash className="w-16 h-16 text-destructive mb-4" />
           <h1 className="text-3xl font-bold mb-4 text-destructive">Oops! Terjadi kesalahan.</h1>
           <p className="text-lg text-muted-foreground mb-6">Kami tidak dapat memuat konten halaman saat ini. Silakan coba lagi nanti atau hubungi dukungan.</p>
-          <Link href="/login">
-            <Button variant="outline">Masuk ke Panel Admin</Button>
-          </Link>
+          {/* Tombol Masuk Admin dihapus dari sini karena akses via URL */}
         </div>
       </PublicPageLayout>
     );
   }
 
   const { meta_web, mobils, galleries, testimonis, faqs } = data;
-  const websiteName = meta_web?.website_name || "Rental Mobil Kami";
+  const websiteName = meta_web?.website_name || "Rental Mobil Impian"; // Fallback jika nama website null
 
   return (
     <PublicPageLayout>
       {/* Hero Section */}
-      <header className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground py-20 px-6 sm:px-10 lg:px-16 shadow-lg">
+      <header className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground py-28 md:py-32 px-6 sm:px-10 lg:px-16 shadow-lg">
         <div className="container mx-auto text-center">
-          <h1 className="text-5xl font-bold mb-4 tracking-tight">Selamat Datang di {websiteName}</h1>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            {meta_web?.description || "Tujuan utama Anda untuk rental mobil berkualitas. Jelajahi armada kami dan pesan kendaraan Anda hari ini!"}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 tracking-tight !leading-tight">
+            Kendaraan Impian, Perjalanan Tak Terlupakan Bersama <span className="text-accent">{websiteName}</span>!
+          </h1>
+          <p className="text-lg sm:text-xl mb-10 max-w-3xl mx-auto text-primary-foreground/90">
+            Jelajahi armada premium kami, nikmati harga terbaik, dan layanan pelanggan yang siap membuat setiap perjalanan Anda istimewa. Booking mudah, pengalaman tak terlupakan!
           </p>
-          <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
-            <Link href="#cars">Jelajahi Mobil <ChevronRight className="ml-2 h-5 w-5" /></Link>
+          <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg">
+            <Link href="#cars">Lihat Pilihan Mobil <ChevronRight className="ml-2 h-5 w-5" /></Link>
           </Button>
         </div>
       </header>
