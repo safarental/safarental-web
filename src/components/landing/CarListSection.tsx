@@ -19,9 +19,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogClose, // Ensure DialogClose is imported
-  // DialogTrigger, // Not needed if we manually control open state
-  // DialogFooter, // Already imported
+  DialogClose,
 } from '@/components/ui/dialog';
 import { Car as CarIcon, Eye, MessageCircle, CalendarDays, Settings, Users, DollarSign, Info, Palette } from 'lucide-react';
 import type { Mobil } from '@/types/mobil';
@@ -52,11 +50,6 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
     setIsModalOpen(true);
   };
 
-  // const handleCloseModal = () => { // Not strictly needed if Dialog onOpenChange handles it
-  //   setIsModalOpen(false);
-  //   setSelectedCar(null);
-  // };
-
   const generateWhatsAppMessage = (mobil: Mobil) => {
     const message = `Halo ${websiteName}, saya tertarik untuk menyewa mobil ${mobil.merk} ${mobil.model}. Bisa berikan info lebih lanjut?`;
     return encodeURIComponent(message);
@@ -76,45 +69,56 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
           <CarIcon className="mr-3 h-10 w-10" /> Armada Pilihan Kami
         </h2>
         {mobils && mobils.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8"> {/* Changed to 2 cols on lg for landscape */}
             {mobils.map((mobil) => (
-              <Card key={mobil.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                <div className="relative w-full h-56">
+              <Card 
+                key={mobil.id} 
+                className="flex flex-col md:flex-row overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+              >
+                {/* Image Section */}
+                <div className="w-full md:w-2/5 h-56 md:h-auto relative flex-shrink-0 bg-muted/50"> {/* Adjusted width for landscape, md:h-auto for content height, bg for contain */}
                   <Image
                     src={getPublicStorageUrl(mobil.picture_upload) || `https://placehold.co/600x400.png`}
                     alt={`${mobil.merk} ${mobil.model}`}
                     layout="fill"
-                    objectFit="cover"
+                    objectFit="contain" // Changed to contain for "no crop"
+                    className="p-2 md:p-3" // Padding inside the image container for "contain"
                     data-ai-hint={`${mobil.category} car`}
                   />
                 </div>
-                <CardHeader>
-                  <CardTitle className="text-xl font-semibold">{mobil.merk} {mobil.model}</CardTitle>
-                  <CardDescription>{mobil.category} - {mobil.year}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    <p className="flex items-center"><Settings className="mr-2 h-4 w-4 text-primary" /> Transmisi: {mobil.transmission}</p>
-                    <p className="flex items-center"><Users className="mr-2 h-4 w-4 text-primary" /> Kursi: {mobil.seat}</p>
+
+                {/* Content Section */}
+                <div className="flex flex-col flex-1 p-4 justify-between"> {/* justify-between for vertical spacing */}
+                  <div>
+                    <CardHeader className="p-0 mb-2">
+                      <CardTitle className="text-xl font-semibold">{mobil.merk} {mobil.model}</CardTitle>
+                      <CardDescription>{mobil.category} - {mobil.year}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-0 mb-3">
+                      <div className="space-y-1 text-sm text-muted-foreground">
+                        <p className="flex items-center"><Settings className="mr-2 h-4 w-4 text-primary" /> Transmisi: {mobil.transmission}</p>
+                        <p className="flex items-center"><Users className="mr-2 h-4 w-4 text-primary" /> Kursi: {mobil.seat}</p>
+                      </div>
+                      <p className="text-lg font-bold text-primary mt-3">Rp {formatPriceForDisplay(mobil.price)} / hari</p>
+                    </CardContent>
                   </div>
-                  <p className="text-lg font-bold text-primary mt-3">Rp {formatPriceForDisplay(mobil.price)} / hari</p>
-                </CardContent>
-                <CardFooter className="flex flex-col sm:flex-row gap-2 pt-0">
-                  <Button variant="outline" className="w-full sm:w-auto flex-1" onClick={() => handleOpenModal(mobil)}>
-                    <Eye className="mr-2 h-4 w-4" /> Lihat Detail
-                  </Button>
-                  {whatsappNumber ? (
-                    <Button asChild className="w-full sm:w-auto flex-1 bg-green-500 hover:bg-green-600 text-white">
-                      <Link href={`https://wa.me/${whatsappNumber}?text=${generateWhatsAppMessage(mobil)}`} target="_blank" rel="noopener noreferrer">
-                        <MessageCircle className="mr-2 h-4 w-4" /> Pesan WhatsApp
-                      </Link>
+                  <CardFooter className="flex flex-col sm:flex-row gap-2 p-0 mt-3"> {/* mt-3 for spacing if content above is short */}
+                    <Button variant="outline" className="w-full sm:w-auto flex-1 text-sm py-2" onClick={() => handleOpenModal(mobil)}>
+                      <Eye className="mr-2 h-4 w-4" /> Lihat Detail
                     </Button>
-                  ) : (
-                    <Button className="w-full sm:w-auto flex-1" disabled>
-                      <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp
-                    </Button>
-                  )}
-                </CardFooter>
+                    {whatsappNumber ? (
+                      <Button asChild className="w-full sm:w-auto flex-1 bg-green-500 hover:bg-green-600 text-white text-sm py-2">
+                        <Link href={`https://wa.me/${whatsappNumber}?text=${generateWhatsAppMessage(mobil)}`} target="_blank" rel="noopener noreferrer">
+                          <MessageCircle className="mr-2 h-4 w-4" /> Pesan WhatsApp
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button className="w-full sm:w-auto flex-1 text-sm py-2" disabled>
+                        <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp
+                      </Button>
+                    )}
+                  </CardFooter>
+                </div>
               </Card>
             ))}
           </div>
@@ -133,12 +137,13 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
               </DialogDescription>
             </DialogHeader>
             <div className="mt-6 space-y-6">
-              <div className="relative w-full h-64 md:h-72 rounded-lg overflow-hidden border">
+              <div className="relative w-full h-64 md:h-72 rounded-lg overflow-hidden border bg-muted/50">
                 <Image
                   src={getPublicStorageUrl(selectedCar.picture_upload) || `https://placehold.co/600x400.png`}
                   alt={`${selectedCar.merk} ${selectedCar.model}`}
                   layout="fill"
-                  objectFit="cover"
+                  objectFit="contain" // Consistent with card view
+                  className="p-2" // Consistent padding
                   data-ai-hint={`${selectedCar.category} detail`}
                 />
               </div>
@@ -205,4 +210,3 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
     </section>
   );
 }
-
