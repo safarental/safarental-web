@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Menu, X, Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils'; // cn import is present
+import { cn } from '@/lib/utils';
 
 interface LandingNavbarProps {
   websiteName?: string | null;
@@ -17,7 +17,7 @@ const navLinks = [
   { href: '/#cars', label: 'Armada' },
   { href: '/#gallery', label: 'Galeri' },
   { href: '/#faq', label: 'FAQ' },
-  { href: '/about-us', label: 'Tentang Kami' },
+  // { href: '/about-us', label: 'Tentang Kami' }, // Link Tentang Kami dihapus
 ];
 
 export function LandingNavbar({ websiteName }: LandingNavbarProps) {
