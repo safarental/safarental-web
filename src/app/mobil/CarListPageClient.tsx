@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -17,14 +17,15 @@ import { getPublicStorageUrl } from '@/lib/imageUtils';
 import { Car as CarIcon, Eye, MessageCircle, CalendarDays, Settings, Users, DollarSign, Info, Palette, Filter, Search, Loader2, AlertTriangle, ChevronLeft, ChevronRight, ListCollapse } from 'lucide-react';
 import { Slider } from "@/components/ui/slider";
 
-const ITEMS_PER_PAGE = 6; // Sesuaikan dengan limit API atau preferensi
+const ITEMS_PER_PAGE = 6; 
+const ALL_TRANSMISSIONS_VALUE = "__ALL_TRANSMISSIONS__";
 
 interface Filters {
   merk: string;
   model: string;
   transmission: string;
-  seat: string; // Gunakan string untuk input, konversi ke number saat fetch
-  price: string; // Gunakan string untuk input harga maksimal, konversi ke number saat fetch
+  seat: string; 
+  price: string; 
 }
 
 const formatPriceForDisplay = (priceString: string | number): string => {
@@ -42,9 +43,9 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
     model: '',
     transmission: '',
     seat: '',
-    price: '2000000', // Harga maksimal default, bisa disesuaikan
+    price: '2000000', 
   });
-  const [maxPriceRange, setMaxPriceRange] = useState(5000000); // Maksimum untuk slider
+  const [maxPriceRange, setMaxPriceRange] = useState(5000000); 
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   const [selectedCar, setSelectedCar] = useState<Mobil | null>(null);
@@ -70,7 +71,7 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
       }
       const data: PublicListMobilResponse = await response.json();
       setCars(data.mobils || []);
-      setCurrentPage(1); // Reset ke halaman pertama setelah filter
+      setCurrentPage(1); 
     } catch (err: any) {
       setError(err.message);
       setCars([]);
@@ -83,13 +84,17 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
     fetchCars();
   }, [fetchCars]);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFilters(prev => ({ ...prev, [name]: value }));
   };
   
   const handleSelectChange = (name: keyof Filters, value: string) => {
-    setFilters(prev => ({ ...prev, [name]: value }));
+    if (name === 'transmission') {
+      setFilters(prev => ({ ...prev, transmission: value === ALL_TRANSMISSIONS_VALUE ? '' : value }));
+    } else {
+      setFilters(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handlePriceSliderChange = (value: number[]) => {
@@ -104,10 +109,8 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
   
   const handleClearFilters = () => {
     setFilters({ merk: '', model: '', transmission: '', seat: '', price: String(maxPriceRange) });
-    // fetchCars() akan dipanggil oleh useEffect karena filters berubah
   };
 
-  // Paginasi Client-side
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
   const currentItems = cars.slice(indexOfFirstItem, indexOfLastItem);
@@ -142,7 +145,6 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
         </p>
       </div>
 
-      {/* Filter Section */}
       <div className="mb-8 p-6 bg-card rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold text-primary flex items-center">
@@ -157,7 +159,6 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
           </Button>
         </div>
 
-        {/* Mobile Filter Dialog */}
         {isMobileFilterOpen && (
             <Dialog open={isMobileFilterOpen} onOpenChange={setIsMobileFilterOpen}>
                 <DialogContent className="sm:max-w-md">
@@ -166,7 +167,6 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
                         <DialogDescription>Sesuaikan kriteria pencarian Anda.</DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleFilterSubmit} className="space-y-4 py-4">
-                        {/* Filter fields duplicated for mobile - consider refactoring to a shared component */}
                         <div className="space-y-2">
                           <Label htmlFor="merk-mobile">Merek</Label>
                           <Input id="merk-mobile" name="merk" value={filters.merk} onChange={handleFilterChange} placeholder="cth., Toyota" />
@@ -177,10 +177,14 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="transmission-mobile">Transmisi</Label>
-                          <Select name="transmission" value={filters.transmission} onValueChange={(value) => handleSelectChange('transmission', value)}>
+                          <Select 
+                            name="transmission" 
+                            value={filters.transmission === '' ? ALL_TRANSMISSIONS_VALUE : filters.transmission} 
+                            onValueChange={(value) => handleSelectChange('transmission', value)}
+                          >
                             <SelectTrigger id="transmission-mobile"><SelectValue placeholder="Pilih Transmisi" /></SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="">Semua</SelectItem>
+                              <SelectItem value={ALL_TRANSMISSIONS_VALUE}>Semua</SelectItem>
                               {TRANSMISSION_TYPES.map(type => <SelectItem key={type} value={type}>{type}</SelectItem>)}
                             </SelectContent>
                           </Select>
@@ -195,7 +199,7 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
                             id="price-mobile"
                             name="price"
                             min={50000} max={maxPriceRange} step={50000}
-                            defaultValue={[parseFloat(filters.price) || maxPriceRange]}
+                            value={[parseFloat(filters.price)]}
                             onValueChange={(value) => handlePriceSliderChange(value)}
                             className="my-4"
                           />
@@ -213,7 +217,6 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
             </Dialog>
         )}
         
-        {/* Desktop Filter Form */}
         <form onSubmit={handleFilterSubmit} className={`space-y-6 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 md:gap-6 ${isMobileFilterOpen ? 'hidden' : 'block'} md:block`}>
           <div className="space-y-1">
             <Label htmlFor="merk">Merek</Label>
@@ -225,10 +228,14 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
           </div>
           <div className="space-y-1">
             <Label htmlFor="transmission">Transmisi</Label>
-            <Select name="transmission" value={filters.transmission} onValueChange={(value) => handleSelectChange('transmission', value)}>
+            <Select 
+              name="transmission" 
+              value={filters.transmission === '' ? ALL_TRANSMISSIONS_VALUE : filters.transmission} 
+              onValueChange={(value) => handleSelectChange('transmission', value)}
+            >
               <SelectTrigger id="transmission"><SelectValue placeholder="Pilih Transmisi" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Semua</SelectItem>
+                <SelectItem value={ALL_TRANSMISSIONS_VALUE}>Semua</SelectItem>
                 {TRANSMISSION_TYPES.map(type => <SelectItem key={type} value={type}>{type}</SelectItem>)}
               </SelectContent>
             </Select>
@@ -242,7 +249,6 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
             <Slider
               id="price" name="price"
               min={50000} max={maxPriceRange} step={50000}
-              defaultValue={[parseFloat(filters.price)]}
               value={[parseFloat(filters.price)]}
               onValueChange={handlePriceSliderChange}
               className="my-4"
@@ -259,7 +265,6 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
         </form>
       </div>
 
-      {/* Car List Section */}
       {isLoading && (
         <div className="flex justify-center items-center py-10">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -330,7 +335,6 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
             ))}
           </div>
 
-          {/* Paginasi Controls */}
           {totalPages > 1 && (
             <div className="flex justify-center items-center space-x-2 mt-8">
               <Button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} variant="outline" size="icon">
@@ -355,7 +359,6 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
         </>
       )}
 
-      {/* Modal Detail Mobil */}
       {selectedCar && (
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogContent className="sm:max-w-lg md:max-w-3xl max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-xl">
@@ -413,3 +416,5 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
     </div>
   );
 }
+
+    
