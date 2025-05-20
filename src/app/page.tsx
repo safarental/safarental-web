@@ -7,13 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { CarListSection } from '@/components/landing/CarListSection';
 import { FeedbackForm } from '@/components/landing/FeedbackForm';
-import { GallerySection } from '@/components/landing/GallerySection'; // Import baru
+import { GallerySection } from '@/components/landing/GallerySection';
+import { TestimonialsSection } from '@/components/landing/TestimonialsSection'; // Import baru
 import { getPublicStorageUrl } from '@/lib/imageUtils';
-import { Mail, MapPin, MessageCircle as MessageCircleIcon, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles, MessageSquare } from 'lucide-react';
+import { Mail, MapPin, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles, MessageSquare } from 'lucide-react';
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
   try {
-    // Tambah no-cache agar data selalu terbaru, atau atur revalidate yang sesuai
     const response = await fetch(`${API_BASE_URL}/home`, { cache: 'no-store' }); 
     if (!response.ok) {
       const errorText = await response.text();
@@ -22,7 +22,6 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     }
     const responseData: LandingPageApiResponse = await response.json();
 
-    // Fallback untuk meta_web jika null atau tidak ada
     if (!responseData.meta_web) {
       responseData.meta_web = {
         website_name: "Rental Mobil Kami",
@@ -41,7 +40,6 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
       }
     }
     
-    // Memastikan mobils.price adalah string, sesuai dengan update tipe sebelumnya
     if (responseData.mobils) {
       responseData.mobils = responseData.mobils.map((mobil) => ({
         ...mobil,
@@ -73,15 +71,6 @@ export default async function LandingPage() {
   }
 
   const { meta_web, mobils, galleries, testimonis, faqs } = data;
-
-  const renderStars = (rating: number) => {
-    const totalStars = 5;
-    const fullStars = Math.max(0, Math.min(totalStars, Math.round(rating)));
-    return Array(totalStars).fill(0).map((_, i) => (
-      <Star key={i} className={`w-5 h-5 ${i < fullStars ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
-    ));
-  };
-
   const websiteName = meta_web?.website_name || "Rental Mobil Kami";
 
 
@@ -155,7 +144,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Gallery Section - Menggunakan komponen baru */}
+      {/* Gallery Section */}
       {galleries && galleries.length > 0 && (
         <GallerySection galleries={galleries} />
       )}
@@ -164,27 +153,16 @@ export default async function LandingPage() {
       {testimonis && testimonis.length > 0 && (
         <section id="testimonials" className="py-16 px-6 sm:px-10 lg:px-16">
           <div className="container mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><Users className="mr-3 h-10 w-10" /> Kata Pelanggan Kami</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {testimonis.map((testimoni) => (
-                <Card key={testimoni.id} className="shadow-lg flex flex-col items-center text-center p-6">
-                  <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-primary bg-gray-200 flex items-center justify-center">
-                    <span className="text-3xl font-semibold text-primary">
-                      {testimoni.name ? testimoni.name.substring(0, 1).toUpperCase() : 'P'}
-                    </span>
-                  </div>
-                  <CardTitle className="text-lg font-semibold mb-1">{testimoni.name}</CardTitle>
-                  {typeof testimoni.rate === 'number' && testimoni.rate > 0 && (
-                    <div className="flex mb-2">
-                      {renderStars(testimoni.rate)}
-                    </div>
-                  )}
-                  <CardContent className="text-sm text-muted-foreground italic p-0">
-                    "{testimoni.feedback}"
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <h2 className="text-4xl font-bold text-center mb-4 text-primary flex items-center justify-center">
+                <Users className="mr-3 h-10 w-10" /> Kata Pelanggan Kami
+            </h2>
+            <p className="text-lg text-center text-muted-foreground mb-2 max-w-3xl mx-auto">
+                Dengarkan apa kata mereka yang telah merasakan kualitas layanan terbaik dari kami. Kepuasan Anda adalah cerita sukses kami selanjutnya!
+            </p>
+            <p className="text-sm text-center text-muted-foreground mb-12">
+                Total {testimonis.length} ulasan memuaskan.
+            </p>
+            <TestimonialsSection testimonis={testimonis} />
           </div>
         </section>
       )}
@@ -241,7 +219,7 @@ export default async function LandingPage() {
                   )}
                    {meta_web.whatsapp && (
                     <p className="flex items-center justify-center md:justify-start text-sm">
-                      <MessageSquare className="mr-2 h-5 w-5" /> {/* Mengganti MessageCircleIcon dengan MessageSquare */}
+                      <MessageSquare className="mr-2 h-5 w-5" />
                       <a 
                         href={`https://wa.me/${meta_web.whatsapp.replace(/\D/g, '')}`} 
                         target="_blank" 
