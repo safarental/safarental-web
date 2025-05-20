@@ -1,17 +1,17 @@
 
 "use client";
 
-import type { MetaWebLanding } from '@/types/LandingPageData';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Menu, X, Building } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'; // cn import is present
 
 interface LandingNavbarProps {
   websiteName?: string | null;
 }
 
+// Navigation links for the landing page
 const navLinks = [
   { href: '/', label: 'Beranda' },
   { href: '/#cars', label: 'Armada' },
@@ -38,7 +38,7 @@ export function LandingNavbar({ websiteName }: LandingNavbarProps) {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-foreground hover:text-primary transition-colors font-medium"
+                className={cn("text-foreground hover:text-primary transition-colors font-medium")}
               >
                 {link.label}
               </Link>
