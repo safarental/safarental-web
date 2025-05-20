@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import AppHeader from './AppHeader';
-import { Loader2, Building, LayoutDashboard, UserCircle, Car, ImageIcon as ImageIconLucide } from 'lucide-react'; // Added ImageIcon
+import { Loader2, Building, LayoutDashboard, UserCircle, Car, ImageIcon as ImageIconLucide, Settings } from 'lucide-react'; // Added Settings icon
 import {
   SidebarProvider,
   Sidebar,
@@ -78,7 +78,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem> {/* Gallery Menu Item */}
+            <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
                 isActive={pathname.startsWith('/admin/galleries')}
@@ -87,6 +87,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <Link href="/admin/galleries">
                   <ImageIconLucide />
                   <span>Galleries</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith('/admin/meta-web')}
+                tooltip={{ children: "Website Settings", side: "right", align: "center" }}
+              >
+                <Link href="/admin/meta-web">
+                  <Settings />
+                  <span>Meta Website</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
