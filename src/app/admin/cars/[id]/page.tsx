@@ -14,6 +14,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Edit, Loader2, AlertTriangle, Car, Tag, CalendarDays, Settings, Users, DollarSign, Info, ImageIcon } from 'lucide-react';
 
+const isValidHttpUrl = (string: string | null | undefined): boolean => {
+  if (!string) return false;
+  try {
+    const url = new URL(string);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+};
+
 export default function ViewCarPage() {
   const [car, setCar] = useState<Mobil | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -123,7 +133,7 @@ export default function ViewCarPage() {
   const getStatusVariant = (status: Mobil['status']): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
       case 'Available':
-        return 'default'; // Or a success-like variant
+        return 'default'; 
       case 'Disewa':
         return 'secondary';
       case 'Out Of Order':
@@ -132,6 +142,10 @@ export default function ViewCarPage() {
         return 'outline';
     }
   };
+
+  const imageSrc = isValidHttpUrl(car.picture_upload) 
+    ? car.picture_upload!
+    : `https://placehold.co/200x150.png`;
 
   return (
     <AppLayout>
@@ -161,7 +175,7 @@ export default function ViewCarPage() {
           <CardHeader className="bg-muted/30 p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <Image
-                    src={car.picture_upload || `https://placehold.co/200x150.png?text=${car.merk}`}
+                    src={imageSrc}
                     alt={`${car.merk} ${car.model}`}
                     width={200}
                     height={150}
@@ -181,7 +195,7 @@ export default function ViewCarPage() {
             <DetailItem icon={Settings} label="Transmission" value={car.transmission} />
             <DetailItem icon={Users} label="Seat Capacity" value={`${car.seat} seats`} />
             <DetailItem icon={DollarSign} label="Price per Day" value={`Rp ${car.price.toLocaleString('id-ID')}`} />
-            <DetailItem icon={ImageIcon} label="Image URL" value={car.picture_upload ? <a href={car.picture_upload} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate block max-w-xs">{car.picture_upload}</a> : 'N/A'} />
+            <DetailItem icon={ImageIcon} label="Image URL" value={isValidHttpUrl(car.picture_upload) ? <a href={car.picture_upload!} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate block max-w-xs">{car.picture_upload}</a> : 'N/A'} />
             <div className="md:col-span-2 lg:col-span-3">
                  <DetailItem icon={Info} label="Description" value={car.description || 'No description provided.'} />
             </div>

@@ -34,6 +34,16 @@ interface CarsTableProps {
   isDeleting: number | null; // Store ID of car being deleted
 }
 
+const isValidHttpUrl = (string: string | null | undefined): boolean => {
+  if (!string) return false;
+  try {
+    const url = new URL(string);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+};
+
 export function CarsTable({ carsResponse, onDelete, isDeleting }: CarsTableProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [carToDelete, setCarToDelete] = useState<Mobil | null>(null);
@@ -73,7 +83,7 @@ export function CarsTable({ carsResponse, onDelete, isDeleting }: CarsTableProps
   const getStatusVariant = (status: Mobil['status']): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
       case 'Available':
-        return 'default'; // Or a success-like variant if you add one
+        return 'default'; 
       case 'Disewa':
         return 'secondary';
       case 'Out Of Order':
@@ -101,57 +111,62 @@ export function CarsTable({ carsResponse, onDelete, isDeleting }: CarsTableProps
           </TableRow>
         </TableHeader>
         <TableBody>
-          {cars.map((car) => (
-            <TableRow key={car.id}>
-              <TableCell>
-                <Image
-                  src={car.picture_upload || `https://placehold.co/100x70.png?text=${car.merk.charAt(0)}`}
-                  alt={car.merk}
-                  width={80}
-                  height={56}
-                  className="rounded-md object-cover"
-                  data-ai-hint="car image"
-                />
-              </TableCell>
-              <TableCell>
-                <div className="font-medium">{car.merk}</div>
-                <div className="text-sm text-muted-foreground">{car.model}</div>
-              </TableCell>
-              <TableCell>{car.plat_number || 'N/A'}</TableCell>
-              <TableCell>{car.year}</TableCell>
-              <TableCell>{car.transmission}</TableCell>
-              <TableCell>{car.seat}</TableCell>
-              <TableCell>Rp {car.price.toLocaleString('id-ID')}</TableCell>
-              <TableCell>
-                 <Badge variant={getStatusVariant(car.status)}>{car.status}</Badge>
-              </TableCell>
-              <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Open menu</span>
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem asChild>
-                      <Link href={`/admin/cars/${car.id}`}>
-                        <Eye className="mr-2 h-4 w-4" /> View
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href={`/admin/cars/${car.id}/edit`}>
-                        <Edit className="mr-2 h-4 w-4" /> Edit
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDeleteClick(car)} disabled={isDeleting === car.id}>
-                      <Trash2 className="mr-2 h-4 w-4" /> Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
+          {cars.map((car) => {
+            const imageSrc = isValidHttpUrl(car.picture_upload) 
+              ? car.picture_upload! 
+              : `https://placehold.co/100x70.png`;
+            return (
+              <TableRow key={car.id}>
+                <TableCell>
+                  <Image
+                    src={imageSrc}
+                    alt={`${car.merk} ${car.model}`}
+                    width={80}
+                    height={56}
+                    className="rounded-md object-cover border"
+                    data-ai-hint="car image"
+                  />
+                </TableCell>
+                <TableCell>
+                  <div className="font-medium">{car.merk}</div>
+                  <div className="text-sm text-muted-foreground">{car.model}</div>
+                </TableCell>
+                <TableCell>{car.plat_number || 'N/A'}</TableCell>
+                <TableCell>{car.year}</TableCell>
+                <TableCell>{car.transmission}</TableCell>
+                <TableCell>{car.seat}</TableCell>
+                <TableCell>Rp {car.price.toLocaleString('id-ID')}</TableCell>
+                <TableCell>
+                   <Badge variant={getStatusVariant(car.status)}>{car.status}</Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem asChild>
+                        <Link href={`/admin/cars/${car.id}`}>
+                          <Eye className="mr-2 h-4 w-4" /> View
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href={`/admin/cars/${car.id}/edit`}>
+                          <Edit className="mr-2 h-4 w-4" /> Edit
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDeleteClick(car)} disabled={isDeleting === car.id}>
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
 
