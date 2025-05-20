@@ -17,7 +17,6 @@ const navLinks = [
   { href: '/#cars', label: 'Armada' },
   { href: '/#gallery', label: 'Galeri' },
   { href: '/#faq', label: 'FAQ' },
-  // { href: '/about-us', label: 'Tentang Kami' }, // Link Tentang Kami sudah dihapus dan tetap dihapus
 ];
 
 export function LandingNavbar({ websiteName }: LandingNavbarProps) {
@@ -43,9 +42,7 @@ export function LandingNavbar({ websiteName }: LandingNavbarProps) {
                 {link.label}
               </Link>
             ))}
-             <Button asChild>
-                <Link href="/login">Masuk Admin</Link>
-            </Button>
+            {/* Tombol Masuk Admin dihapus dari sini */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -76,9 +73,7 @@ export function LandingNavbar({ websiteName }: LandingNavbarProps) {
                 {link.label}
               </Link>
             ))}
-            <Button asChild className="w-full mt-2">
-                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>Masuk Admin</Link>
-            </Button>
+            {/* Tombol Masuk Admin dihapus dari sini */}
           </div>
         </div>
       )}
