@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Mail, MapPin, MessageCircle as MessageCircleIcon, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash } from 'lucide-react';
+import { Mail, MapPin, MessageCircle as MessageCircleIcon, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles } from 'lucide-react';
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
   try {
@@ -18,6 +18,10 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
       return null;
     }
     const responseData = await response.json();
+    if (responseData.meta_web && responseData.meta_web.website_name === null) {
+        // API might return null for website_name, provide a default
+        responseData.meta_web.website_name = "Rental Mobil Kami";
+    }
     if (responseData.mobils) {
       responseData.mobils = responseData.mobils.map((mobil: any) => ({
         ...mobil,
@@ -40,6 +44,9 @@ export default async function LandingPage() {
         <ServerCrash className="w-16 h-16 text-destructive mb-4" />
         <h1 className="text-3xl font-bold mb-4 text-destructive">Oops! Terjadi kesalahan.</h1>
         <p className="text-lg text-muted-foreground mb-6">Kami tidak dapat memuat konten halaman saat ini. Silakan coba lagi nanti atau hubungi dukungan.</p>
+         <Link href="/login">
+          <Button variant="outline">Masuk ke Panel Admin</Button>
+        </Link>
       </div>
     );
   }
@@ -62,12 +69,14 @@ export default async function LandingPage() {
     return priceNumber.toLocaleString('id-ID');
   };
 
+  const websiteName = meta_web?.website_name || "Rental Mobil Kami";
+
 
   return (
     <div className="bg-background text-foreground">
       <header className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground py-20 px-4 shadow-lg">
         <div className="container mx-auto text-center">
-          <h1 className="text-5xl font-bold mb-4 tracking-tight">Selamat Datang di {meta_web?.website_name || "Rental Mobil Kami"}</h1>
+          <h1 className="text-5xl font-bold mb-4 tracking-tight">Selamat Datang di {websiteName}</h1>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             {meta_web?.description || "Tujuan utama Anda untuk rental mobil berkualitas. Jelajahi armada kami dan pesan kendaraan Anda hari ini!"}
           </p>
@@ -108,6 +117,56 @@ export default async function LandingPage() {
           </div>
         </section>
       )}
+
+      <section id="excellence" className="py-16 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-4 text-primary">Rasakan Bedanya, Nikmati Keunggulannya!</h2>
+          <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
+            Kami tidak hanya menyewakan mobil, kami memberikan pengalaman berkendara terbaik dengan berbagai keunggulan yang siap menemani setiap perjalanan Anda.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { icon: CarFront, title: "Armada Selalu Prima", description: "Mobil-mobil terbaru dengan perawatan rutin untuk kenyamanan dan keamanan maksimal." },
+              { icon: BadgePercent, title: "Harga Jujur & Bersaing", description: "Tarif transparan tanpa biaya tersembunyi, penawaran terbaik untuk kualitas prima." },
+              { icon: Rocket, title: "Pemesanan Super Cepat", description: "Proses booking online yang mudah, hanya dalam beberapa klik mobil siap Anda gunakan." },
+              { icon: LifeBuoy, title: "Dukungan Pelanggan Responsif", description: "Tim kami siap membantu Anda 24/7, menjawab pertanyaan dan mengatasi kendala dengan sigap." },
+            ].map((item, index) => (
+              <Card key={index} className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="flex justify-center mb-4">
+                  <item.icon className="h-12 w-12 text-primary" />
+                </div>
+                <CardTitle className="text-xl font-semibold mb-2">{item.title}</CardTitle>
+                <CardDescription>{item.description}</CardDescription>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="why-us" className="py-16 px-4 bg-muted/30">
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-4 text-primary">Pilihan Cerdas untuk Setiap Perjalanan Anda</h2>
+          <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
+            Lebih dari sekadar rental mobil, kami adalah partner perjalanan tepercaya yang mengutamakan kepuasan dan kenyamanan Anda.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { icon: Award, title: "Terpercaya & Berpengalaman", description: "Bertahun-tahun melayani dengan standar tertinggi, membangun reputasi yang solid." },
+              { icon: HeartHandshake, title: "Fokus pada Pelanggan", description: "Kepuasan Anda adalah prioritas kami, kami selalu mendengarkan dan berinovasi." },
+              { icon: GitCompareArrows, title: "Fleksibilitas Tanpa Batas", description: "Berbagai pilihan mobil dan paket sewa yang bisa disesuaikan dengan kebutuhan Anda." },
+              { icon: Sparkles, title: "Komitmen pada Kualitas", description: "Dari kebersihan mobil hingga layanan, kami tidak pernah berkompromi pada kualitas." },
+            ].map((item, index) => (
+              <Card key={index} className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="flex justify-center mb-4">
+                  <item.icon className="h-12 w-12 text-accent" />
+                </div>
+                <CardTitle className="text-xl font-semibold mb-2">{item.title}</CardTitle>
+                <CardDescription>{item.description}</CardDescription>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {galleries && galleries.length > 0 && (
         <section id="gallery" className="py-16 px-4">
@@ -187,7 +246,7 @@ export default async function LandingPage() {
         <div className="container mx-auto text-center md:text-left">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
             <div>
-              <h3 className="text-2xl font-bold mb-2">{meta_web?.website_name || "Adminify Rentals"}</h3>
+              <h3 className="text-2xl font-bold mb-2">{websiteName}</h3>
               <p className="text-sm opacity-80">Perjalanan berkualitas, harga tak terkalahkan.</p>
             </div>
             {meta_web && (
@@ -219,7 +278,7 @@ export default async function LandingPage() {
             )}
           </div>
           <div className="border-t border-primary-foreground/20 mt-8 pt-6 text-sm text-center opacity-80">
-            &copy; {new Date().getFullYear()} {meta_web?.website_name || "Adminify"}. Hak cipta dilindungi.
+            &copy; {new Date().getFullYear()} {websiteName}. Hak cipta dilindungi.
             <p className="mt-1">Ditenagai oleh Firebase Studio</p>
           </div>
         </div>
