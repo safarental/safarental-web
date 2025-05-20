@@ -14,7 +14,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogClose,
+  // DialogClose, // No longer needed here as DialogContent provides one
 } from "@/components/ui/dialog";
 
 interface GallerySectionProps {
@@ -32,8 +32,8 @@ export function GallerySection({ galleries }: GallerySectionProps) {
   const checkScrollability = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-      setCanScrollLeft(scrollLeft > 5); // Add a small buffer
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5); // Add a small buffer
+      setCanScrollLeft(scrollLeft > 5); 
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5); 
     }
   };
 
@@ -43,16 +43,22 @@ export function GallerySection({ galleries }: GallerySectionProps) {
     container?.addEventListener('scroll', checkScrollability, { passive: true });
     window.addEventListener('resize', checkScrollability);
 
+    // Initial check on mount
+    const timeoutId = setTimeout(checkScrollability, 100); // Small delay for layout to settle
+
     return () => {
       container?.removeEventListener('scroll', checkScrollability);
       window.removeEventListener('resize', checkScrollability);
+      clearTimeout(timeoutId);
     };
-  }, [galleries]);
+  }, [galleries]); // Re-check if galleries change
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
-      const itemWidth = scrollContainerRef.current.querySelector('div > div')?.clientWidth || 240; // w-60
-      const scrollAmount = itemWidth * 0.8; // Scroll by 80% of one item width
+      // Estimate item width; might need adjustment if items have variable width/margins
+      const firstItem = scrollContainerRef.current.querySelector('div > div') as HTMLElement;
+      const itemWidth = firstItem?.offsetWidth || 240; // w-60 -> 240px, fallback
+      const scrollAmount = itemWidth * 0.8; 
       
       scrollContainerRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
@@ -97,7 +103,7 @@ export function GallerySection({ galleries }: GallerySectionProps) {
                 onKeyDown={(e) => e.key === 'Enter' && handleOpenModal(item)}
                 className={cn(
                   "flex-shrink-0 w-60 h-60 rounded-lg shadow-lg group/item relative overflow-hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                  "sm:w-full sm:h-auto sm:aspect-[4/3]"
+                  "sm:w-full sm:h-auto sm:aspect-[4/3]" // Aspect ratio for larger screens
                 )}
               >
                 <Image
@@ -116,8 +122,7 @@ export function GallerySection({ galleries }: GallerySectionProps) {
             ))}
           </div>
 
-          {/* Arrow buttons for mobile/scrollable view */}
-          {galleries.length > 2 && ( // Only show arrows if there's something to scroll significantly
+          {galleries.length > 2 && (
             <>
               {canScrollLeft && (
                 <Button
@@ -155,26 +160,23 @@ export function GallerySection({ galleries }: GallerySectionProps) {
       {selectedImage && (
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
           <DialogContent className="sm:max-w-3xl max-w-[90vw] p-0 bg-card overflow-hidden max-h-[85vh] flex flex-col">
-            <DialogHeader className="p-4 pb-2 border-b border-border">
+            <DialogHeader className="p-4 pb-2 border-b border-border relative"> {/* Added relative for absolute positioning of close button if needed by DialogContent's default */}
               <DialogTitle className="text-xl text-primary">{selectedImage.title}</DialogTitle>
               {selectedImage.description && (
                 <DialogDescription className="text-sm text-muted-foreground">{selectedImage.description}</DialogDescription>
               )}
-               <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                <XIcon className="h-5 w-5" />
-                <span className="sr-only">Tutup</span>
-              </DialogClose>
+              {/* The DialogContent component itself will render the default close button */}
             </DialogHeader>
             <div className="p-4 flex-1 overflow-y-auto">
               <div className="relative w-full h-auto min-h-[30vh] max-h-[70vh] bg-muted/50 rounded-md flex items-center justify-center">
                 <Image
                   src={getPublicStorageUrl(selectedImage.picture_upload) || `https://placehold.co/1200x800.png`}
                   alt={selectedImage.title || 'Detail gambar galeri'}
-                  layout="intrinsic" // Changed to intrinsic for better sizing within modal
-                  width={1200} // Provide base width
-                  height={800} // Provide base height
+                  layout="intrinsic" 
+                  width={1200} 
+                  height={800} 
                   objectFit="contain"
-                  className="rounded-md max-w-full max-h-[calc(70vh-2rem)]" // Max height relative to viewport height minus padding
+                  className="rounded-md max-w-full max-h-[calc(70vh-2rem)]" 
                   data-ai-hint="gallery fullview"
                 />
               </div>
@@ -185,3 +187,4 @@ export function GallerySection({ galleries }: GallerySectionProps) {
     </section>
   );
 }
+
