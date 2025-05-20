@@ -14,9 +14,7 @@ interface LandingNavbarProps {
 // Navigation links for the landing page
 const navLinks = [
   { href: '/', label: 'Beranda' },
-  { href: '/#cars', label: 'Armada Unggulan' },
-  { href: '/mobil', label: 'Semua Mobil'}, // Link baru
-  { href: '/#gallery', label: 'Galeri' },
+  { href: '/mobil', label: 'Semua Mobil'},
   { href: '/#faq', label: 'FAQ' },
 ];
 
