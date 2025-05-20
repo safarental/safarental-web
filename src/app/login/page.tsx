@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -34,7 +34,13 @@ export default function LoginPage() {
     },
   });
 
-  if (authLoading) {
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.replace('/admin/dashboard');
+    }
+  }, [authLoading, isAuthenticated, router]);
+
+  if (authLoading || (!authLoading && isAuthenticated)) {
      return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -42,16 +48,11 @@ export default function LoginPage() {
     );
   }
 
-  if (isAuthenticated) {
-    router.replace('/admin/dashboard');
-    return null;
-  }
-
   const onSubmit = async (values: LoginFormValues) => {
     setIsSubmitting(true);
     try {
       await login(values.email, values.password);
-      // Redirect is handled by AuthContext
+      // Redirect is handled by AuthContext or the useEffect above
     } catch (error) {
       // Error toast is handled by AuthContext
     } finally {
