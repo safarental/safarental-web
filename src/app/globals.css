@@ -79,8 +79,19 @@ body {
 }
 
 @layer base {
-  /* Removed global border: * { @apply border-border; } */
   body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Helper class to hide scrollbars */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+    

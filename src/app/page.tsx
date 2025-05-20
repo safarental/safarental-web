@@ -7,12 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { CarListSection } from '@/components/landing/CarListSection';
 import { FeedbackForm } from '@/components/landing/FeedbackForm';
+import { GallerySection } from '@/components/landing/GallerySection'; // Import baru
 import { getPublicStorageUrl } from '@/lib/imageUtils';
 import { Mail, MapPin, MessageCircle as MessageCircleIcon, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles, MessageSquare } from 'lucide-react';
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/home`, { next: { revalidate: 3600 } });
+    // Tambah no-cache agar data selalu terbaru, atau atur revalidate yang sesuai
+    const response = await fetch(`${API_BASE_URL}/home`, { cache: 'no-store' }); 
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Gagal memuat data landing page:", response.status, errorText);
@@ -20,26 +22,33 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     }
     const responseData: LandingPageApiResponse = await response.json();
 
+    // Fallback untuk meta_web jika null atau tidak ada
     if (!responseData.meta_web) {
       responseData.meta_web = {
         website_name: "Rental Mobil Kami",
-        description: "Deskripsi default jika tidak ada dari API."
+        description: "Deskripsi default jika tidak ada dari API.",
+        whatsapp: null,
+        instagram: null,
+        address: null,
+        email: null
       };
     } else {
-      if (responseData.meta_web.website_name === null || responseData.meta_web.website_name === undefined) {
+       if (responseData.meta_web.website_name === null || responseData.meta_web.website_name === undefined) {
           responseData.meta_web.website_name = "Rental Mobil Kami";
       }
        if (responseData.meta_web.description === null || responseData.meta_web.description === undefined) {
           responseData.meta_web.description = "Deskripsi default jika tidak ada dari API.";
       }
     }
-
+    
+    // Memastikan mobils.price adalah string, sesuai dengan update tipe sebelumnya
     if (responseData.mobils) {
       responseData.mobils = responseData.mobils.map((mobil) => ({
         ...mobil,
-        price: String(mobil.price)
+        price: String(mobil.price) 
       }));
     }
+
     return responseData;
   } catch (error) {
     console.error("Error memuat data landing page:", error);
@@ -52,7 +61,7 @@ export default async function LandingPage() {
 
   if (!data) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-center p-4 bg-background text-foreground">
+      <div className="flex flex-col items-center justify-center min-h-screen text-center p-6 bg-background text-foreground">
         <ServerCrash className="w-16 h-16 text-destructive mb-4" />
         <h1 className="text-3xl font-bold mb-4 text-destructive">Oops! Terjadi kesalahan.</h1>
         <p className="text-lg text-muted-foreground mb-6">Kami tidak dapat memuat konten halaman saat ini. Silakan coba lagi nanti atau hubungi dukungan.</p>
@@ -146,42 +155,9 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Gallery Section */}
+      {/* Gallery Section - Menggunakan komponen baru */}
       {galleries && galleries.length > 0 && (
-        <section id="gallery" className="py-16 px-6 sm:px-10 lg:px-16 bg-muted/30">
-          <div className="container mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-4 text-primary flex items-center justify-center"><Images className="mr-3 h-10 w-10" /> Galeri Kami</h2>
-            <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
-              Intip momen-momen perjalanan tak terlupakan bersama armada kami. Dari petualangan seru hingga kenyamanan keluarga, biarkan galeri ini menginspirasi perjalanan Anda berikutnya.
-            </p>
-            <div className="mt-8">
-              <div className="
-                flex overflow-x-auto space-x-4 pb-4 
-                sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-4 sm:space-x-0 sm:pb-0 sm:overflow-visible
-              ">
-                {galleries.map((item) => (
-                  <div
-                    key={item.id}
-                    className="
-                      flex-shrink-0 w-48 rounded-lg shadow-lg group relative aspect-square overflow-hidden
-                      sm:w-full sm:flex-shrink"
-                  >
-                    <img
-                      src={getPublicStorageUrl(item.picture_upload) || `https://placehold.co/400x400.png`}
-                      alt={item.title || 'Gambar galeri'}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      data-ai-hint="activity travel"
-                    />
-                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center">
-                      <h3 className="text-lg font-semibold text-white mb-1">{item.title}</h3>
-                      {item.description && <p className="text-sm text-gray-200">{item.description}</p>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        <GallerySection galleries={galleries} />
       )}
 
       {/* Testimoni Section */}
@@ -263,9 +239,17 @@ export default async function LandingPage() {
                       <Mail className="mr-2 h-5 w-5" /> <a href={`mailto:${meta_web.email}`} className="hover:underline">{meta_web.email}</a>
                     </p>
                   )}
-                  {meta_web.whatsapp && (
+                   {meta_web.whatsapp && (
                     <p className="flex items-center justify-center md:justify-start text-sm">
-                      <MessageCircleIcon className="mr-2 h-5 w-5" /> <a href={`https://wa.me/${meta_web.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="hover:underline">{meta_web.whatsapp}</a>
+                      <MessageSquare className="mr-2 h-5 w-5" /> {/* Mengganti MessageCircleIcon dengan MessageSquare */}
+                      <a 
+                        href={`https://wa.me/${meta_web.whatsapp.replace(/\D/g, '')}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="hover:underline"
+                      >
+                        {meta_web.whatsapp}
+                      </a>
                     </p>
                   )}
                   {meta_web.instagram && (
@@ -286,3 +270,4 @@ export default async function LandingPage() {
     </div>
   );
 }
+    
