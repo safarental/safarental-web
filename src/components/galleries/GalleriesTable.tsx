@@ -34,7 +34,6 @@ interface GalleriesTableProps {
   isDeleting: number | null; 
 }
 
-// Helper function to construct the full image URL for galleries
 const getGalleryImageUrl = (relativePath: string | null | undefined): string | null => {
   if (!relativePath) return null;
   if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
@@ -76,13 +75,13 @@ export function GalleriesTable({ galleriesResponse, onDelete, isDeleting }: Gall
     return (
         <div className="flex flex-col items-center justify-center text-center p-10 border rounded-lg shadow-sm bg-card">
             <ImageIconLucide className="h-16 w-16 text-muted-foreground mb-4" />
-            <h2 className="text-xl font-semibold text-foreground mb-2">No Gallery Items Found</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-2">Tidak Ada Item Galeri Ditemukan</h2>
             <p className="text-muted-foreground mb-6">
-                It looks like there are no items in the gallery yet.
+                Sepertinya belum ada item di galeri.
             </p>
             <Button asChild>
                 <Link href="/admin/galleries/create">
-                    Add Your First Gallery Item
+                    Tambahkan Item Galeri Pertama Anda
                 </Link>
             </Button>
         </div>
@@ -94,10 +93,10 @@ export function GalleriesTable({ galleriesResponse, onDelete, isDeleting }: Gall
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Image</TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead className="text-right w-[100px]">Actions</TableHead>
+            <TableHead className="w-[100px]">Gambar</TableHead>
+            <TableHead>Judul</TableHead>
+            <TableHead>Deskripsi</TableHead>
+            <TableHead className="text-right w-[100px]">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -123,23 +122,23 @@ export function GalleriesTable({ galleriesResponse, onDelete, isDeleting }: Gall
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">Buka menu</span>
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
                         <Link href={`/admin/galleries/${gallery.id}`}>
-                          <Eye className="mr-2 h-4 w-4" /> View
+                          <Eye className="mr-2 h-4 w-4" /> Lihat
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link href={`/admin/galleries/${gallery.id}/edit`}>
-                          <Edit className="mr-2 h-4 w-4" /> Edit
+                          <Edit className="mr-2 h-4 w-4" /> Ubah
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDeleteClick(gallery)} disabled={isDeleting === gallery.id}>
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        <Trash2 className="mr-2 h-4 w-4" /> Hapus
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -153,20 +152,20 @@ export function GalleriesTable({ galleriesResponse, onDelete, isDeleting }: Gall
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to delete this gallery item?</AlertDialogTitle>
+            <AlertDialogTitle>Apakah Anda yakin ingin menghapus item galeri ini?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the gallery item
+              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus item galeri secara permanen
               "{galleryToDelete?.title}" (ID: {galleryToDelete?.id}).
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setGalleryToDelete(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setGalleryToDelete(null)}>Batal</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={isDeleting === galleryToDelete?.id}
             >
-              {isDeleting === galleryToDelete?.id ? "Deleting..." : "Delete"}
+              {isDeleting === galleryToDelete?.id ? "Menghapus..." : "Hapus"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

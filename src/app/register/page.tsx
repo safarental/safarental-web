@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -15,12 +16,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
 const registerSchema = z.object({
-  name: z.string().min(1, { message: 'Name is required.' }).max(255),
-  email: z.string().email({ message: 'Invalid email address.' }).max(255),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
-  password_confirmation: z.string().min(8, { message: 'Password confirmation must be at least 8 characters.' }),
+  name: z.string().min(1, { message: 'Nama diperlukan.' }).max(255),
+  email: z.string().email({ message: 'Alamat email tidak valid.' }).max(255),
+  password: z.string().min(8, { message: 'Kata sandi minimal 8 karakter.' }),
+  password_confirmation: z.string().min(8, { message: 'Konfirmasi kata sandi minimal 8 karakter.' }),
 }).refine(data => data.password === data.password_confirmation, {
-  message: "Passwords don't match",
+  message: "Kata sandi tidak cocok",
   path: ["password_confirmation"], // Path to field to display error
 });
 
@@ -71,8 +72,8 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-background to-secondary">
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-primary">Create an Account</CardTitle>
-          <CardDescription>Join Adminify today and manage your content with ease.</CardDescription>
+          <CardTitle className="text-3xl font-bold text-primary">Buat Akun</CardTitle>
+          <CardDescription>Bergabunglah dengan Adminify hari ini dan kelola konten Anda dengan mudah.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -80,16 +81,16 @@ export default function RegisterPage() {
               <AuthFormFields includeName includeConfirmPassword />
               <Button type="submit" className="w-full" disabled={isSubmitting || authLoading}>
                 {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Register
+                Daftar
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex flex-col items-center space-y-2">
           <p className="text-sm text-muted-foreground">
-            Already have an account?{' '}
+            Sudah punya akun?{' '}
             <Link href="/login" className="font-medium text-primary hover:underline">
-              Login
+              Masuk
             </Link>
           </p>
         </CardFooter>

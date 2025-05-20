@@ -25,9 +25,9 @@ export function FaqForm({
   onSubmit,
   initialData,
   isSubmitting,
-  submitButtonText = "Submit",
-  formTitle = "FAQ Details",
-  formDescription = "Fill in the details for the FAQ."
+  submitButtonText = "Kirim",
+  formTitle = "Detail FAQ",
+  formDescription = "Isi detail untuk FAQ."
 }: FaqFormProps) {
   const form = useForm<FaqFormValues>({
     resolver: zodResolver(faqSchema),
@@ -56,9 +56,9 @@ export function FaqForm({
               name="questions"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Question</FormLabel>
+                  <FormLabel>Pertanyaan</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Enter the question..." {...field} rows={3} />
+                    <Textarea placeholder="Masukkan pertanyaan..." {...field} rows={3} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -70,9 +70,9 @@ export function FaqForm({
               name="answer"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Answer</FormLabel>
+                  <FormLabel>Jawaban</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Enter the answer..." {...field} rows={5} />
+                    <Textarea placeholder="Masukkan jawaban..." {...field} rows={5} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

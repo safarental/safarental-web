@@ -35,7 +35,7 @@ export default function EditGalleryItemPage() {
       const response = await fetchWithAuth(`${API_BASE_URL}/admin/galleries/${galleryItemId}`);
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch gallery item data.');
+        throw new Error(errorData.message || 'Gagal memuat data item galeri.');
       }
       const result: GalleryDetailResponse = await response.json();
       setGalleryItem(result.data);
@@ -76,19 +76,19 @@ export default function EditGalleryItemPage() {
       if (!response.ok) {
          if (response.status === 422 && data.errors) {
            const errorMessages = Object.values(data.errors).flat().join(' ');
-           throw new Error(errorMessages || 'Validation failed');
+           throw new Error(errorMessages || 'Validasi gagal');
         }
-        throw new Error(data.message || 'Failed to update gallery item.');
+        throw new Error(data.message || 'Gagal memperbarui item galeri.');
       }
       toast({
-        title: 'Success!',
-        description: 'Gallery item updated successfully.',
+        title: 'Sukses!',
+        description: 'Item galeri berhasil diperbarui.',
       });
       router.push('/admin/galleries');
     } catch (error: any) {
       toast({
         title: 'Error',
-        description: error.message || 'An unexpected error occurred.',
+        description: error.message || 'Terjadi kesalahan tak terduga.',
         variant: 'destructive',
       });
       console.error("Update gallery item error:", error);
@@ -102,7 +102,7 @@ export default function EditGalleryItemPage() {
       <AppLayout>
         <div className="flex justify-center items-center py-10">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-           <p className="ml-2">Loading gallery item details...</p>
+           <p className="ml-2">Memuat detail item galeri...</p>
         </div>
       </AppLayout>
     );
@@ -113,23 +113,23 @@ export default function EditGalleryItemPage() {
       <AppLayout>
          <div className="space-y-6">
             <div className="flex items-center justify-between">
-                 <h1 className="text-3xl font-bold">Edit Gallery Item</h1>
+                 <h1 className="text-3xl font-bold">Ubah Item Galeri</h1>
                  <Button variant="outline" asChild>
                     <Link href="/admin/galleries">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Gallery List
+                        Kembali ke Daftar Galeri
                     </Link>
                 </Button>
             </div>
             <Card className="border-destructive bg-destructive/10">
                 <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-destructive">
-                    <AlertTriangle /> Error Loading Item
+                    <AlertTriangle /> Gagal Memuat Item
                 </CardTitle>
                 </CardHeader>
                 <CardContent>
                 <p className="text-destructive">{error}</p>
-                 <Button onClick={fetchGalleryItemData} className="mt-4">Retry</Button>
+                 <Button onClick={fetchGalleryItemData} className="mt-4">Coba Lagi</Button>
                 </CardContent>
             </Card>
         </div>
@@ -142,17 +142,17 @@ export default function EditGalleryItemPage() {
       <AppLayout>
          <div className="space-y-6">
             <div className="flex items-center justify-between">
-                 <h1 className="text-3xl font-bold">Edit Gallery Item</h1>
+                 <h1 className="text-3xl font-bold">Ubah Item Galeri</h1>
                  <Button variant="outline" asChild>
                     <Link href="/admin/galleries">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Gallery List
+                        Kembali ke Daftar Galeri
                     </Link>
                 </Button>
             </div>
             <Card>
-                <CardHeader><CardTitle>Gallery Item Not Found</CardTitle></CardHeader>
-                <CardContent><p>The gallery item you are trying to edit could not be found.</p></CardContent>
+                <CardHeader><CardTitle>Item Galeri Tidak Ditemukan</CardTitle></CardHeader>
+                <CardContent><p>Item galeri yang ingin Anda ubah tidak dapat ditemukan.</p></CardContent>
             </Card>
         </div>
       </AppLayout>
@@ -163,11 +163,11 @@ export default function EditGalleryItemPage() {
     <AppLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Edit Gallery Item (ID: {galleryItem.id})</h1>
+            <h1 className="text-3xl font-bold">Ubah Item Galeri (ID: {galleryItem.id})</h1>
             <Button variant="outline" asChild>
                 <Link href="/admin/galleries">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Gallery List
+                    Kembali ke Daftar Galeri
                 </Link>
             </Button>
         </div>
@@ -175,9 +175,9 @@ export default function EditGalleryItemPage() {
           onSubmit={onSubmit}
           initialData={galleryItem}
           isSubmitting={isSubmitting}
-          submitButtonText="Update Item"
-          formTitle={`Editing: ${galleryItem.title}`}
-          formDescription="Update the gallery item details below. To change the picture, upload a new file."
+          submitButtonText="Perbarui Item"
+          formTitle={`Mengubah: ${galleryItem.title}`}
+          formDescription="Perbarui detail item galeri di bawah ini. Untuk mengganti gambar, unggah file baru."
         />
       </div>
     </AppLayout>

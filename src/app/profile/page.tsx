@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,12 +11,10 @@ export default function ProfilePage() {
   const { user } = useAuth();
 
   if (!user) {
-    // This case should ideally be handled by AppLayout redirecting,
-    // but as a fallback or if accessed directly before redirect.
     return (
       <AppLayout>
         <div className="flex justify-center items-center h-full">
-          <p>Loading user profile...</p>
+          <p>Memuat profil pengguna...</p>
         </div>
       </AppLayout>
     );
@@ -41,28 +40,28 @@ export default function ProfilePage() {
               <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
             </Avatar>
             <CardTitle className="text-3xl font-bold text-primary">{user.name}</CardTitle>
-            <CardDescription>Your personal account details.</CardDescription>
+            <CardDescription>Detail akun pribadi Anda.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
               <UserCircle className="h-6 w-6 text-primary" />
               <div>
-                <p className="text-sm font-medium text-foreground">Full Name</p>
+                <p className="text-sm font-medium text-foreground">Nama Lengkap</p>
                 <p className="text-lg text-foreground">{user.name}</p>
               </div>
             </div>
             <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
               <Mail className="h-6 w-6 text-primary" />
               <div>
-                <p className="text-sm font-medium text-foreground">Email Address</p>
+                <p className="text-sm font-medium text-foreground">Alamat Email</p>
                 <p className="text-lg text-foreground">{user.email}</p>
               </div>
             </div>
              <div className="flex items-center space-x-4 p-4 bg-accent/10 rounded-lg border border-accent">
               <ShieldCheck className="h-6 w-6 text-accent" />
               <div>
-                <p className="text-sm font-medium text-accent-foreground">Account Status</p>
-                <p className="text-lg text-accent-foreground">Verified</p>
+                <p className="text-sm font-medium text-accent-foreground">Status Akun</p>
+                <p className="text-lg text-accent-foreground">Terverifikasi</p>
               </div>
             </div>
           </CardContent>

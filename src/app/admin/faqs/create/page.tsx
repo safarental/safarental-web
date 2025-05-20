@@ -32,20 +32,20 @@ export default function CreateFaqPage() {
       if (!response.ok) {
         if (response.status === 422 && data.errors) {
            const errorMessages = Object.values(data.errors).flat().join(' ');
-           throw new Error(errorMessages || 'Validation failed');
+           throw new Error(errorMessages || 'Validasi gagal');
         }
-        throw new Error(data.message || 'Failed to create FAQ.');
+        throw new Error(data.message || 'Gagal membuat FAQ.');
       }
 
       toast({
-        title: 'Success!',
-        description: 'FAQ created successfully.',
+        title: 'Sukses!',
+        description: 'FAQ berhasil dibuat.',
       });
       router.push('/admin/faqs');
     } catch (error: any) {
       toast({
         title: 'Error',
-        description: error.message || 'An unexpected error occurred.',
+        description: error.message || 'Terjadi kesalahan tak terduga.',
         variant: 'destructive',
       });
       console.error("Create FAQ error:", error);
@@ -58,20 +58,20 @@ export default function CreateFaqPage() {
     <AppLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Create New FAQ</h1>
+            <h1 className="text-3xl font-bold">Buat FAQ Baru</h1>
             <Button variant="outline" asChild>
                 <Link href="/admin/faqs">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to FAQ List
+                    Kembali ke Daftar FAQ
                 </Link>
             </Button>
         </div>
         <FaqForm
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
-          submitButtonText="Create FAQ"
-          formTitle="Add a New FAQ"
-          formDescription="Please provide the question and its answer."
+          submitButtonText="Buat FAQ"
+          formTitle="Tambah FAQ Baru"
+          formDescription="Mohon sediakan pertanyaan dan jawabannya."
         />
       </div>
     </AppLayout>

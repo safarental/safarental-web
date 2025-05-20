@@ -29,19 +29,18 @@ export default function MetaWebPage() {
       const response = await fetchWithAuth(`${API_BASE_URL}/admin/meta-web`);
       if (!response.ok) {
         if (response.status === 404) {
-          // MetaWeb not found, this is fine, form will be for creation
           setMetaWebData(null); 
           return;
         }
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch website settings.');
+        throw new Error(errorData.message || 'Gagal memuat pengaturan website.');
       }
       const result: MetaWebResponse = await response.json();
       setMetaWebData(result.data);
     } catch (err: any) {
       setError(err.message);
       console.error("Fetch MetaWeb error:", err);
-      setMetaWebData(null); // Reset data on error
+      setMetaWebData(null); 
     } finally {
       setIsLoading(false);
     }
@@ -64,19 +63,19 @@ export default function MetaWebPage() {
       if (!response.ok) {
          if (response.status === 422 && (data as any).errors) {
            const errorMessages = Object.values((data as any).errors).flat().join(' ');
-           throw new Error(errorMessages || 'Validation failed');
+           throw new Error(errorMessages || 'Validasi gagal');
         }
-        throw new Error(data.message || 'Failed to save website settings.');
+        throw new Error(data.message || 'Gagal menyimpan pengaturan website.');
       }
       toast({
-        title: 'Success!',
-        description: data.message || 'Website settings saved successfully.',
+        title: 'Sukses!',
+        description: data.message || 'Pengaturan website berhasil disimpan.',
       });
-      setMetaWebData(data.data); // Update local state with new data
+      setMetaWebData(data.data); 
     } catch (error: any) {
       toast({
         title: 'Error',
-        description: error.message || 'An unexpected error occurred.',
+        description: error.message || 'Terjadi kesalahan tak terduga.',
         variant: 'destructive',
       });
       console.error("Save MetaWeb error:", error);
@@ -90,7 +89,7 @@ export default function MetaWebPage() {
       <AppLayout>
         <div className="flex justify-center items-center py-10">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-           <p className="ml-2">Loading website settings...</p>
+           <p className="ml-2">Memuat pengaturan website...</p>
         </div>
       </AppLayout>
     );
@@ -100,35 +99,34 @@ export default function MetaWebPage() {
     <AppLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Website Settings</h1>
+            <h1 className="text-3xl font-bold">Pengaturan Website</h1>
             <Button variant="outline" onClick={fetchMetaWebData} disabled={isLoading}>
                 <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                Refresh Data
+                Muat Ulang Data
             </Button>
         </div>
 
-        {error && !metaWebData && ( // Show critical error only if data couldn't be fetched at all
+        {error && !metaWebData && ( 
              <Card className="border-destructive bg-destructive/10">
                 <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-destructive">
-                    <AlertTriangle /> Error Loading Settings
+                    <AlertTriangle /> Gagal Memuat Pengaturan
                 </CardTitle>
                 </CardHeader>
                 <CardContent>
                 <p className="text-destructive">{error}</p>
-                 <Button onClick={fetchMetaWebData} className="mt-4">Retry</Button>
+                 <Button onClick={fetchMetaWebData} className="mt-4">Coba Lagi</Button>
                 </CardContent>
             </Card>
         )}
 
-        {/* Render form even if metaWebData is null (for creation) or if there was a non-critical fetch error */}
         {(!error || metaWebData) && (
             <MetaWebForm
             onSubmit={onSubmit}
             initialData={metaWebData}
             isSubmitting={isSubmitting}
-            formTitle="Manage Website Information"
-            formDescription={metaWebData ? "Update your website's general information, contact details, and social media links." : "Configure your website's initial settings. All fields are optional except Website Name."}
+            formTitle="Kelola Informasi Website"
+            formDescription={metaWebData ? "Perbarui informasi umum, detail kontak, dan tautan media sosial website Anda." : "Konfigurasikan pengaturan awal website Anda. Semua field bersifat opsional kecuali Nama Website."}
             />
         )}
       </div>

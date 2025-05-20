@@ -32,7 +32,7 @@ export default function FaqsPage() {
       const data: FaqsResponse = await response.json();
       setFaqsResponse(data);
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch FAQs.');
+      setError(err.message || 'Gagal memuat FAQ.');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -51,17 +51,17 @@ export default function FaqsPage() {
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to delete FAQ.');
+        throw new Error(data.message || 'Gagal menghapus FAQ.');
       }
       toast({
-        title: 'Success!',
-        description: 'FAQ deleted successfully.',
+        title: 'Sukses!',
+        description: 'FAQ berhasil dihapus.',
       });
-      fetchFaqs(); // Refetch all FAQs
+      fetchFaqs(); 
     } catch (error: any) {
       toast({
         title: 'Error',
-        description: error.message || 'An unexpected error occurred.',
+        description: error.message || 'Terjadi kesalahan tak terduga.',
         variant: 'destructive',
       });
     } finally {
@@ -73,11 +73,11 @@ export default function FaqsPage() {
     <AppLayout>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <h1 className="text-3xl font-bold">FAQ Management</h1>
+          <h1 className="text-3xl font-bold">Manajemen Tanya Jawab (FAQ)</h1>
           <Button asChild>
             <Link href="/admin/faqs/create">
               <PlusCircle className="mr-2 h-5 w-5" />
-              Add New FAQ
+              Tambah FAQ Baru
             </Link>
           </Button>
         </div>
@@ -85,7 +85,7 @@ export default function FaqsPage() {
         {isLoading && (
           <div className="flex justify-center items-center py-10">
             <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            <p className="ml-2">Loading FAQs...</p>
+            <p className="ml-2">Memuat FAQ...</p>
           </div>
         )}
 
@@ -93,12 +93,12 @@ export default function FaqsPage() {
           <Card className="border-destructive bg-destructive/10">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-destructive">
-                <AlertTriangle /> Error Fetching FAQs
+                <AlertTriangle /> Gagal Memuat FAQ
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-destructive">{error}</p>
-              <Button onClick={fetchFaqs} className="mt-4">Retry</Button>
+              <Button onClick={fetchFaqs} className="mt-4">Coba Lagi</Button>
             </CardContent>
           </Card>
         )}

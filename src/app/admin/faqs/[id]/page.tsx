@@ -29,7 +29,7 @@ export default function ViewFaqPage() {
       const response = await fetchWithAuth(`${API_BASE_URL}/admin/faqs/${faqId}`);
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch FAQ data.');
+        throw new Error(errorData.message || 'Gagal memuat data FAQ.');
       }
       const result: FaqDetailResponse = await response.json();
       setFaq(result.data);
@@ -50,7 +50,7 @@ export default function ViewFaqPage() {
       <AppLayout>
         <div className="flex justify-center items-center py-10">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="ml-2">Loading FAQ details...</p>
+          <p className="ml-2">Memuat detail FAQ...</p>
         </div>
       </AppLayout>
     );
@@ -61,23 +61,23 @@ export default function ViewFaqPage() {
       <AppLayout>
         <div className="space-y-6">
              <div className="flex items-center justify-between">
-                 <h1 className="text-3xl font-bold">View FAQ</h1>
+                 <h1 className="text-3xl font-bold">Lihat FAQ</h1>
                  <Button variant="outline" asChild>
                     <Link href="/admin/faqs">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to FAQ List
+                        Kembali ke Daftar FAQ
                     </Link>
                 </Button>
             </div>
             <Card className="border-destructive bg-destructive/10">
                 <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-destructive">
-                    <AlertTriangle /> Error Loading FAQ
+                    <AlertTriangle /> Gagal Memuat FAQ
                 </CardTitle>
                 </CardHeader>
                 <CardContent>
                 <p className="text-destructive">{error}</p>
-                <Button onClick={fetchFaqData} className="mt-4">Retry</Button>
+                <Button onClick={fetchFaqData} className="mt-4">Coba Lagi</Button>
                 </CardContent>
             </Card>
         </div>
@@ -90,17 +90,17 @@ export default function ViewFaqPage() {
       <AppLayout>
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                 <h1 className="text-3xl font-bold">View FAQ</h1>
+                 <h1 className="text-3xl font-bold">Lihat FAQ</h1>
                  <Button variant="outline" asChild>
                     <Link href="/admin/faqs">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to FAQ List
+                        Kembali ke Daftar FAQ
                     </Link>
                 </Button>
             </div>
             <Card>
-                <CardHeader><CardTitle>FAQ Not Found</CardTitle></CardHeader>
-                <CardContent><p>The FAQ you are trying to view could not be found.</p></CardContent>
+                <CardHeader><CardTitle>FAQ Tidak Ditemukan</CardTitle></CardHeader>
+                <CardContent><p>FAQ yang ingin Anda lihat tidak dapat ditemukan.</p></CardContent>
             </Card>
         </div>
       </AppLayout>
@@ -112,20 +112,20 @@ export default function ViewFaqPage() {
       <div className="space-y-6">
          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-                <h1 className="text-3xl font-bold">FAQ Detail</h1>
-                <p className="text-muted-foreground">Details for FAQ ID: {faq.id}</p>
+                <h1 className="text-3xl font-bold">Detail FAQ</h1>
+                <p className="text-muted-foreground">Detail untuk FAQ ID: {faq.id}</p>
             </div>
             <div className="flex gap-2">
                 <Button variant="outline" asChild>
                     <Link href="/admin/faqs">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to List
+                    Kembali ke Daftar
                     </Link>
                 </Button>
                 <Button asChild>
                     <Link href={`/admin/faqs/${faq.id}/edit`}>
                     <Edit className="mr-2 h-4 w-4" />
-                    Edit FAQ
+                    Ubah FAQ
                     </Link>
                 </Button>
             </div>
@@ -134,21 +134,21 @@ export default function ViewFaqPage() {
         <Card className="shadow-lg">
           <CardHeader className="bg-muted/30">
             <CardTitle className="flex items-center gap-2 text-primary">
-              <MessageSquare className="h-6 w-6" /> Question
+              <MessageSquare className="h-6 w-6" /> Pertanyaan
             </CardTitle>
             <CardDescription className="pt-2 text-lg text-foreground">{faq.questions}</CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <h3 className="flex items-center gap-2 text-xl font-semibold text-primary mb-2">
-                <CheckSquare className="h-6 w-6" /> Answer
+                <CheckSquare className="h-6 w-6" /> Jawaban
             </h3>
             <div className="prose max-w-none text-foreground">
                 <p>{faq.answer}</p>
             </div>
           </CardContent>
            <CardFooter className="bg-muted/30 p-4 text-xs text-muted-foreground flex justify-between">
-            <span>Created: {faq.created_at ? new Date(faq.created_at).toLocaleString() : 'N/A'}</span>
-            <span>Last Updated: {faq.updated_at ? new Date(faq.updated_at).toLocaleString() : 'N/A'}</span>
+            <span>Dibuat: {faq.created_at ? new Date(faq.created_at).toLocaleString('id-ID') : 'N/A'}</span>
+            <span>Terakhir Diperbarui: {faq.updated_at ? new Date(faq.updated_at).toLocaleString('id-ID') : 'N/A'}</span>
           </CardFooter>
         </Card>
       </div>

@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Edit, Loader2, AlertTriangle, Info, CalendarDays, ImageIcon as ImageIconLucide } from 'lucide-react';
 
-// Helper function to construct the full image URL for galleries
 const getGalleryImageUrl = (relativePath: string | null | undefined): string | null => {
   if (!relativePath) return null;
   if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
@@ -49,7 +48,7 @@ export default function ViewGalleryItemPage() {
       const response = await fetchWithAuth(`${API_BASE_URL}/admin/galleries/${galleryItemId}`);
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch gallery item data.');
+        throw new Error(errorData.message || 'Gagal memuat data item galeri.');
       }
       const result: GalleryDetailResponse = await response.json();
       setGalleryItem(result.data);
@@ -70,7 +69,7 @@ export default function ViewGalleryItemPage() {
       <AppLayout>
         <div className="flex justify-center items-center py-10">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          <p className="ml-2">Loading gallery item details...</p>
+          <p className="ml-2">Memuat detail item galeri...</p>
         </div>
       </AppLayout>
     );
@@ -81,23 +80,23 @@ export default function ViewGalleryItemPage() {
       <AppLayout>
         <div className="space-y-6">
              <div className="flex items-center justify-between">
-                 <h1 className="text-3xl font-bold">View Gallery Item</h1>
+                 <h1 className="text-3xl font-bold">Lihat Item Galeri</h1>
                  <Button variant="outline" asChild>
                     <Link href="/admin/galleries">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Gallery List
+                        Kembali ke Daftar Galeri
                     </Link>
                 </Button>
             </div>
             <Card className="border-destructive bg-destructive/10">
                 <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-destructive">
-                    <AlertTriangle /> Error Loading Item
+                    <AlertTriangle /> Gagal Memuat Item
                 </CardTitle>
                 </CardHeader>
                 <CardContent>
                 <p className="text-destructive">{error}</p>
-                <Button onClick={fetchGalleryItemData} className="mt-4">Retry</Button>
+                <Button onClick={fetchGalleryItemData} className="mt-4">Coba Lagi</Button>
                 </CardContent>
             </Card>
         </div>
@@ -110,17 +109,17 @@ export default function ViewGalleryItemPage() {
       <AppLayout>
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                 <h1 className="text-3xl font-bold">View Gallery Item</h1>
+                 <h1 className="text-3xl font-bold">Lihat Item Galeri</h1>
                  <Button variant="outline" asChild>
                     <Link href="/admin/galleries">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Gallery List
+                        Kembali ke Daftar Galeri
                     </Link>
                 </Button>
             </div>
             <Card>
-                <CardHeader><CardTitle>Gallery Item Not Found</CardTitle></CardHeader>
-                <CardContent><p>The gallery item you are trying to view could not be found.</p></CardContent>
+                <CardHeader><CardTitle>Item Galeri Tidak Ditemukan</CardTitle></CardHeader>
+                <CardContent><p>Item galeri yang ingin Anda lihat tidak dapat ditemukan.</p></CardContent>
             </Card>
         </div>
       </AppLayout>
@@ -138,7 +137,6 @@ export default function ViewGalleryItemPage() {
   );
   
   const imageUrl = getGalleryImageUrl(galleryItem.picture_upload);
-  const displayImageUrl = galleryItem.picture_upload ? getGalleryImageUrl(galleryItem.picture_upload) : 'https://placehold.co/600x400.png';
 
   return (
     <AppLayout>
@@ -146,19 +144,19 @@ export default function ViewGalleryItemPage() {
          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
                 <h1 className="text-3xl font-bold">{galleryItem.title}</h1>
-                <p className="text-muted-foreground">Details for Gallery Item ID: {galleryItem.id}</p>
+                <p className="text-muted-foreground">Detail Item Galeri ID: {galleryItem.id}</p>
             </div>
             <div className="flex gap-2">
                 <Button variant="outline" asChild>
                     <Link href="/admin/galleries">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to List
+                    Kembali ke Daftar
                     </Link>
                 </Button>
                 <Button asChild>
                     <Link href={`/admin/galleries/${galleryItem.id}/edit`}>
                     <Edit className="mr-2 h-4 w-4" />
-                    Edit Item
+                    Ubah Item
                     </Link>
                 </Button>
             </div>
@@ -188,17 +186,17 @@ export default function ViewGalleryItemPage() {
             <div className="md:col-span-2 space-y-6">
                  <DetailItem 
                     icon={ImageIconLucide} 
-                    label="Image URL" 
+                    label="URL Gambar" 
                     value={imageUrl ? 
                         <a href={imageUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate block max-w-xs">{imageUrl}</a> 
                         : 'N/A'} 
                 />
-                <DetailItem icon={Info} label="Description" value={galleryItem.description || 'No description provided.'} />
+                <DetailItem icon={Info} label="Deskripsi" value={galleryItem.description || 'Tidak ada deskripsi.'} />
             </div>
           </CardContent>
            <CardFooter className="bg-muted/30 p-4 text-xs text-muted-foreground flex justify-between">
-            <span>Created: {galleryItem.created_at ? new Date(galleryItem.created_at).toLocaleString() : 'N/A'}</span>
-            <span>Last Updated: {galleryItem.updated_at ? new Date(galleryItem.updated_at).toLocaleString() : 'N/A'}</span>
+            <span>Dibuat: {galleryItem.created_at ? new Date(galleryItem.created_at).toLocaleString('id-ID') : 'N/A'}</span>
+            <span>Terakhir Diperbarui: {galleryItem.updated_at ? new Date(galleryItem.updated_at).toLocaleString('id-ID') : 'N/A'}</span>
           </CardFooter>
         </Card>
       </div>

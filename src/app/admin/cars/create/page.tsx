@@ -52,20 +52,20 @@ export default function CreateCarPage() {
       if (!response.ok) {
         if (response.status === 422 && data.errors) {
            const errorMessages = Object.values(data.errors).flat().join(' ');
-           throw new Error(errorMessages || 'Validation failed');
+           throw new Error(errorMessages || 'Validasi gagal');
         }
-        throw new Error(data.message || 'Failed to create car.');
+        throw new Error(data.message || 'Gagal membuat mobil.');
       }
 
       toast({
-        title: 'Success!',
-        description: 'Car created successfully.',
+        title: 'Sukses!',
+        description: 'Mobil berhasil dibuat.',
       });
       router.push('/admin/cars');
     } catch (error: any) {
       toast({
         title: 'Error',
-        description: error.message || 'An unexpected error occurred.',
+        description: error.message || 'Terjadi kesalahan tak terduga.',
         variant: 'destructive',
       });
       console.error("Create car error:", error);
@@ -78,20 +78,20 @@ export default function CreateCarPage() {
     <AppLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Create New Car</h1>
+            <h1 className="text-3xl font-bold">Buat Mobil Baru</h1>
             <Button variant="outline" asChild>
                 <Link href="/admin/cars">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Car List
+                    Kembali ke Daftar Mobil
                 </Link>
             </Button>
         </div>
         <CarForm
           onSubmit={onSubmit}
           isSubmitting={isSubmitting}
-          submitButtonText="Create Car"
-          formTitle="Add a New Car"
-          formDescription="Please fill in all required fields to add a new car to the system."
+          submitButtonText="Buat Mobil"
+          formTitle="Tambah Mobil Baru"
+          formDescription="Mohon isi semua field yang wajib diisi untuk menambahkan mobil baru ke sistem."
         />
       </div>
     </AppLayout>

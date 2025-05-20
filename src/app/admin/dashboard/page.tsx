@@ -34,7 +34,7 @@ export default function DashboardPage() {
         const result: DashboardData = await response.json();
         setData(result);
       } catch (err: any) {
-        setError(err.message || 'Failed to fetch dashboard data.');
+        setError(err.message || 'Gagal memuat data dasbor.');
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -48,9 +48,8 @@ export default function DashboardPage() {
 
   return (
     <AppLayout>
-      {/* Mengandalkan AppLayout's container untuk centering dan max-width */}
       <div className="space-y-8"> 
-        <h1 className="text-3xl font-bold tracking-tight">Welcome, {displayName}!</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Selamat datang, {displayName}!</h1>
         
         {isLoading && (
           <div className="flex justify-center items-center py-10">
@@ -62,7 +61,7 @@ export default function DashboardPage() {
           <Card className="border-destructive bg-destructive/10">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-destructive">
-                <AlertTriangle /> Error Fetching Data
+                <AlertTriangle /> Gagal Memuat Data
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -75,29 +74,29 @@ export default function DashboardPage() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-primary">Total Cars</CardTitle>
+                <CardTitle className="text-sm font-medium text-primary">Total Mobil</CardTitle>
                 <Car className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">{data.jumlah_mobil ?? 'N/A'}</div>
-                <p className="text-xs text-muted-foreground">Total number of cars listed</p>
+                <p className="text-xs text-muted-foreground">Jumlah total mobil terdaftar</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-primary">5-Star Feedbacks</CardTitle>
+                <CardTitle className="text-sm font-medium text-primary">Ulasan Bintang 5</CardTitle>
                 <Star className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">{data.jumlah_feedback_bintang_5 ?? 'N/A'}</div>
-                <p className="text-xs text-muted-foreground">Highly rated customer reviews</p>
+                <p className="text-xs text-muted-foreground">Ulasan pelanggan dengan rating tinggi</p>
               </CardContent>
             </Card>
             
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 md:col-span-2 lg:col-span-1">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-primary">Logged In User</CardTitle>
+                <CardTitle className="text-sm font-medium text-primary">Pengguna Masuk</CardTitle>
                 <User className="h-5 w-5 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -110,10 +109,10 @@ export default function DashboardPage() {
          {!isLoading && !error && !data && (
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">No Data Available</CardTitle>
+                    <CardTitle className="flex items-center gap-2">Data Tidak Tersedia</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <p>Dashboard data could not be loaded or is empty.</p>
+                    <p>Data dasbor tidak dapat dimuat atau kosong.</p>
                 </CardContent>
             </Card>
         )}

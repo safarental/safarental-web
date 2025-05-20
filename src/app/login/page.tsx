@@ -15,8 +15,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
 const loginSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address.' }),
-  password: z.string().min(1, { message: 'Password is required.' }),
+  email: z.string().email({ message: 'Alamat email tidak valid.' }),
+  password: z.string().min(1, { message: 'Kata sandi diperlukan.' }),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -64,8 +64,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-background to-secondary">
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-primary">Welcome Back!</CardTitle>
-          <CardDescription>Sign in to access your dashboard.</CardDescription>
+          <CardTitle className="text-3xl font-bold text-primary">Selamat Datang Kembali!</CardTitle>
+          <CardDescription>Masuk untuk mengakses dasbor Anda.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -73,12 +73,11 @@ export default function LoginPage() {
               <AuthFormFields />
               <Button type="submit" className="w-full" disabled={isSubmitting || authLoading}>
                 {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Login
+                Masuk
               </Button>
             </form>
           </Form>
         </CardContent>
-        {/* CardFooter containing the registration link is removed */}
       </Card>
     </div>
   );

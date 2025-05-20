@@ -26,9 +26,9 @@ export function MetaWebForm({
   onSubmit,
   initialData,
   isSubmitting,
-  submitButtonText = "Save Settings",
-  formTitle = "Website Settings",
-  formDescription = "Manage your website's general information and metadata."
+  submitButtonText = "Simpan Pengaturan",
+  formTitle = "Pengaturan Website",
+  formDescription = "Kelola informasi umum dan metadata website Anda."
 }: MetaWebFormProps) {
   const form = useForm<MetaWebFormValues>({
     resolver: zodResolver(metaWebSchema),
@@ -73,9 +73,9 @@ export function MetaWebForm({
               name="website_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Website Name</FormLabel>
+                  <FormLabel>Nama Website</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your Awesome Website" {...field} />
+                    <Input placeholder="Website Keren Anda" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,9 +87,9 @@ export function MetaWebForm({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Deskripsi (Opsional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="A brief description of your website." {...field} value={field.value ?? ""} />
+                    <Textarea placeholder="Deskripsi singkat website Anda." {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -101,9 +101,9 @@ export function MetaWebForm({
               name="vision"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vision (Optional)</FormLabel>
+                  <FormLabel>Visi (Opsional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Your company's vision." {...field} value={field.value ?? ""} />
+                    <Textarea placeholder="Visi perusahaan Anda." {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -115,9 +115,9 @@ export function MetaWebForm({
               name="mission"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Mission (Optional)</FormLabel>
+                  <FormLabel>Misi (Opsional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Your company's mission." {...field} value={field.value ?? ""} />
+                    <Textarea placeholder="Misi perusahaan Anda." {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,9 +130,9 @@ export function MetaWebForm({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email (Optional)</FormLabel>
+                    <FormLabel>Email (Opsional)</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="contact@example.com" {...field} value={field.value ?? ""} />
+                      <Input type="email" placeholder="kontak@contoh.com" {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -144,9 +144,9 @@ export function MetaWebForm({
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone Number (Optional)</FormLabel>
+                    <FormLabel>Nomor Telepon (Opsional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="+1234567890" {...field} value={field.value ?? ""} />
+                      <Input placeholder="+621234567890" {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -159,25 +159,25 @@ export function MetaWebForm({
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address (Optional)</FormLabel>
+                  <FormLabel>Alamat (Opsional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="123 Main St, City, Country" {...field} value={field.value ?? ""} />
+                    <Textarea placeholder="Jl. Utama No. 123, Kota, Negara" {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             
-            <h3 className="text-lg font-medium pt-4 border-t">Social Media (Optional)</h3>
+            <h3 className="text-lg font-medium pt-4 border-t">Media Sosial (Opsional)</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
                 name="whatsapp"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>WhatsApp Number</FormLabel>
+                    <FormLabel>Nomor WhatsApp</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., 628123456789" {...field} value={field.value ?? ""} />
+                      <Input placeholder="cth., 628123456789" {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -188,9 +188,9 @@ export function MetaWebForm({
                 name="instagram"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Instagram Username</FormLabel>
+                    <FormLabel>Nama Pengguna Instagram</FormLabel>
                     <FormControl>
-                      <Input placeholder="your_instagram" {...field} value={field.value ?? ""} />
+                      <Input placeholder="instagram_anda" {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -201,9 +201,9 @@ export function MetaWebForm({
                 name="facebook"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Facebook Profile URL</FormLabel>
+                    <FormLabel>URL Profil Facebook</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://facebook.com/yourpage" {...field} value={field.value ?? ""} />
+                      <Input placeholder="https://facebook.com/halamananda" {...field} value={field.value ?? ""} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

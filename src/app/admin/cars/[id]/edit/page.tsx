@@ -35,7 +35,7 @@ export default function EditCarPage() {
       const response = await fetchWithAuth(`${API_BASE_URL}/admin/mobils/${carId}`);
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch car data.');
+        throw new Error(errorData.message || 'Gagal memuat data mobil.');
       }
       const result: MobilDetailResponse = await response.json();
       setCar(result.data);
@@ -56,7 +56,6 @@ export default function EditCarPage() {
     setIsSubmitting(true);
     const formData = new FormData();
 
-    // Append fields to FormData
     formData.append('category', values.category);
     formData.append('merk', values.merk);
     formData.append('model', values.model);
@@ -65,8 +64,7 @@ export default function EditCarPage() {
     formData.append('seat', String(values.seat));
     formData.append('status', values.status);
     formData.append('price', String(values.price));
-
-    // Ensure nullable fields are sent as empty strings if null/undefined
+    
     formData.append('plat_number', values.plat_number || '');
     formData.append('description', values.description || '');
     
@@ -74,15 +72,12 @@ export default function EditCarPage() {
     if (pictureFile) {
       formData.append('picture_upload', pictureFile);
     }
-    // If no new picture is uploaded, the Laravel backend will keep the old one.
-
-    // For file uploads with PUT/PATCH, Laravel expects a POST request with a _method field.
-    // Ensure _method is appended before making the fetch call.
+    
     formData.append('_method', 'PUT');
 
     try {
       const response = await fetchWithAuth(`${API_BASE_URL}/admin/mobils/${carId}`, {
-        method: 'POST', // Use POST when sending FormData with _method for PUT/PATCH
+        method: 'POST', 
         body: formData,
       });
       
@@ -91,19 +86,19 @@ export default function EditCarPage() {
       if (!response.ok) {
          if (response.status === 422 && data.errors) {
            const errorMessages = Object.values(data.errors).flat().join(' ');
-           throw new Error(errorMessages || 'Validation failed');
+           throw new Error(errorMessages || 'Validasi gagal');
         }
-        throw new Error(data.message || 'Failed to update car.');
+        throw new Error(data.message || 'Gagal memperbarui mobil.');
       }
       toast({
-        title: 'Success!',
-        description: 'Car updated successfully.',
+        title: 'Sukses!',
+        description: 'Mobil berhasil diperbarui.',
       });
       router.push('/admin/cars');
     } catch (error: any) {
       toast({
         title: 'Error',
-        description: error.message || 'An unexpected error occurred.',
+        description: error.message || 'Terjadi kesalahan tak terduga.',
         variant: 'destructive',
       });
       console.error("Update car error:", error);
@@ -117,7 +112,7 @@ export default function EditCarPage() {
       <AppLayout>
         <div className="flex justify-center items-center py-10">
           <Loader2 className="h-12 w-12 animate-spin text-primary" />
-           <p className="ml-2">Loading car details...</p>
+           <p className="ml-2">Memuat detail mobil...</p>
         </div>
       </AppLayout>
     );
@@ -128,23 +123,23 @@ export default function EditCarPage() {
       <AppLayout>
          <div className="space-y-6">
             <div className="flex items-center justify-between">
-                 <h1 className="text-3xl font-bold">Edit Car</h1>
+                 <h1 className="text-3xl font-bold">Ubah Mobil</h1>
                  <Button variant="outline" asChild>
                     <Link href="/admin/cars">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Car List
+                        Kembali ke Daftar Mobil
                     </Link>
                 </Button>
             </div>
             <Card className="border-destructive bg-destructive/10">
                 <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-destructive">
-                    <AlertTriangle /> Error Loading Car
+                    <AlertTriangle /> Gagal Memuat Mobil
                 </CardTitle>
                 </CardHeader>
                 <CardContent>
                 <p className="text-destructive">{error}</p>
-                 <Button onClick={fetchCarData} className="mt-4">Retry</Button>
+                 <Button onClick={fetchCarData} className="mt-4">Coba Lagi</Button>
                 </CardContent>
             </Card>
         </div>
@@ -157,17 +152,17 @@ export default function EditCarPage() {
       <AppLayout>
          <div className="space-y-6">
             <div className="flex items-center justify-between">
-                 <h1 className="text-3xl font-bold">Edit Car</h1>
+                 <h1 className="text-3xl font-bold">Ubah Mobil</h1>
                  <Button variant="outline" asChild>
                     <Link href="/admin/cars">
                         <ArrowLeft className="mr-2 h-4 w-4" />
-                        Back to Car List
+                        Kembali ke Daftar Mobil
                     </Link>
                 </Button>
             </div>
             <Card>
-                <CardHeader><CardTitle>Car Not Found</CardTitle></CardHeader>
-                <CardContent><p>The car you are trying to edit could not be found.</p></CardContent>
+                <CardHeader><CardTitle>Mobil Tidak Ditemukan</CardTitle></CardHeader>
+                <CardContent><p>Mobil yang ingin Anda ubah tidak dapat ditemukan.</p></CardContent>
             </Card>
         </div>
       </AppLayout>
@@ -179,11 +174,11 @@ export default function EditCarPage() {
     <AppLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Edit Car (ID: {car.id})</h1>
+            <h1 className="text-3xl font-bold">Ubah Mobil (ID: {car.id})</h1>
             <Button variant="outline" asChild>
                 <Link href="/admin/cars">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Car List
+                    Kembali ke Daftar Mobil
                 </Link>
             </Button>
         </div>
@@ -191,9 +186,9 @@ export default function EditCarPage() {
           onSubmit={onSubmit}
           initialData={car}
           isSubmitting={isSubmitting}
-          submitButtonText="Update Car"
-          formTitle={`Editing: ${car.merk} ${car.model}`}
-          formDescription="Update the car details below. To change the picture, upload a new file."
+          submitButtonText="Perbarui Mobil"
+          formTitle={`Mengubah: ${car.merk} ${car.model}`}
+          formDescription="Perbarui detail mobil di bawah ini. Untuk mengganti gambar, unggah file baru."
         />
       </div>
     </AppLayout>

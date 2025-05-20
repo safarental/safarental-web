@@ -49,10 +49,10 @@ export default function AppHeader() {
         
         <nav className="flex items-center gap-4">
            <Button variant="ghost" onClick={() => router.push('/admin/dashboard')} className="hidden sm:flex items-center gap-2">
-            <LayoutDashboard className="h-5 w-5" /> Dashboard
+            <LayoutDashboard className="h-5 w-5" /> Dasbor
           </Button>
            <Button variant="ghost" onClick={() => router.push('/profile')} className="hidden sm:flex items-center gap-2">
-            <UserCircle className="h-5 w-5" /> Profile
+            <UserCircle className="h-5 w-5" /> Profil
           </Button>
 
           {user && !isLoading ? (
@@ -77,21 +77,21 @@ export default function AppHeader() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => router.push('/admin/dashboard')} className="sm:hidden">
                   <LayoutDashboard className="mr-2 h-4 w-4" />
-                  <span>Dashboard</span>
+                  <span>Dasbor</span>
                 </DropdownMenuItem>
                  <DropdownMenuItem onClick={() => router.push('/profile')} className="sm:hidden">
                   <UserCircle className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
+                  <span>Profil</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="sm:hidden"/>
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
+                  <span>Keluar</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button onClick={() => router.push('/login')}>Login</Button>
+            <Button onClick={() => router.push('/login')}>Masuk</Button>
           )}
         </nav>
       </div>

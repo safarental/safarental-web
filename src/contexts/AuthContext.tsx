@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(JSON.parse(storedUser));
       }
     } catch (error) {
-      console.error("Failed to load auth data from localStorage", error);
+      console.error("Gagal memuat data otentikasi dari localStorage", error);
       localStorage.removeItem('authToken');
       localStorage.removeItem('authUser');
     } finally {
@@ -87,18 +87,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.message || 'Login gagal');
       }
 
       setUser(data.user);
       setToken(data.token);
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('authUser', JSON.stringify(data.user));
-      toast({ title: 'Success', description: 'Login successful!' });
+      toast({ title: 'Sukses', description: 'Login berhasil!' });
       router.push('/admin/dashboard');
     } catch (error: any) {
       console.error('Login error:', error);
-      toast({ title: 'Error', description: error.message || 'An unknown error occurred.', variant: 'destructive' });
+      toast({ title: 'Error', description: error.message || 'Terjadi kesalahan.', variant: 'destructive' });
       throw error;
     }
   };
@@ -121,14 +121,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const errorMessages = Object.values(data.errors).flat().join(' ');
           throw new Error(errorMessages);
         }
-        throw new Error(data.message || 'Registration failed');
+        throw new Error(data.message || 'Registrasi gagal');
       }
       
-      toast({ title: 'Success', description: 'Registration successful! Please log in.' });
+      toast({ title: 'Sukses', description: 'Registrasi berhasil! Silakan masuk.' });
       router.push('/login');
     } catch (error: any) {
       console.error('Registration error:', error);
-      toast({ title: 'Error', description: error.message || 'An unknown error occurred.', variant: 'destructive' });
+      toast({ title: 'Error', description: error.message || 'Terjadi kesalahan.', variant: 'destructive' });
       throw error;
     }
   };
@@ -142,13 +142,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error: any) {
       console.error('Logout API call failed, proceeding with client-side logout:', error);
-      toast({ title: 'Logout Info', description: 'Could not reach server, logged out locally.', variant: 'default' });
+      toast({ title: 'Info Logout', description: 'Tidak dapat menghubungi server, keluar secara lokal.', variant: 'default' });
     } finally {
       setUser(null);
       setToken(null);
       localStorage.removeItem('authToken');
       localStorage.removeItem('authUser');
-      toast({ title: 'Logged Out', description: 'You have been successfully logged out.' });
+      toast({ title: 'Keluar', description: 'Anda telah berhasil keluar.' });
       router.push('/login');
       setIsLoading(false);
     }

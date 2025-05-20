@@ -55,13 +55,13 @@ export function FaqsTable({ faqsResponse, onDelete, isDeleting }: FaqsTableProps
     return (
         <div className="flex flex-col items-center justify-center text-center p-10 border rounded-lg shadow-sm bg-card">
             <HelpCircle className="h-16 w-16 text-muted-foreground mb-4" />
-            <h2 className="text-xl font-semibold text-foreground mb-2">No FAQs Found</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-2">Tidak Ada FAQ Ditemukan</h2>
             <p className="text-muted-foreground mb-6">
-                It looks like there are no FAQs in the system yet.
+                Sepertinya belum ada FAQ di sistem.
             </p>
             <Button asChild>
                 <Link href="/admin/faqs/create">
-                    Add Your First FAQ
+                    Tambahkan FAQ Pertama Anda
                 </Link>
             </Button>
         </div>
@@ -73,9 +73,9 @@ export function FaqsTable({ faqsResponse, onDelete, isDeleting }: FaqsTableProps
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Question</TableHead>
-            <TableHead>Answer</TableHead>
-            <TableHead className="text-right w-[100px]">Actions</TableHead>
+            <TableHead>Pertanyaan</TableHead>
+            <TableHead>Jawaban</TableHead>
+            <TableHead className="text-right w-[100px]">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -87,23 +87,23 @@ export function FaqsTable({ faqsResponse, onDelete, isDeleting }: FaqsTableProps
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">Buka menu</span>
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
                         <Link href={`/admin/faqs/${faq.id}`}>
-                          <Eye className="mr-2 h-4 w-4" /> View
+                          <Eye className="mr-2 h-4 w-4" /> Lihat
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link href={`/admin/faqs/${faq.id}/edit`}>
-                          <Edit className="mr-2 h-4 w-4" /> Edit
+                          <Edit className="mr-2 h-4 w-4" /> Ubah
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleDeleteClick(faq)} disabled={isDeleting === faq.id}>
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        <Trash2 className="mr-2 h-4 w-4" /> Hapus
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -116,19 +116,19 @@ export function FaqsTable({ faqsResponse, onDelete, isDeleting }: FaqsTableProps
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to delete this FAQ?</AlertDialogTitle>
+            <AlertDialogTitle>Apakah Anda yakin ingin menghapus FAQ ini?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the FAQ: "{faqToDelete?.questions.substring(0, 50)}...".
+              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus FAQ secara permanen: "{faqToDelete?.questions.substring(0, 50)}...".
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setFaqToDelete(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setFaqToDelete(null)}>Batal</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={isDeleting === faqToDelete?.id}
             >
-              {isDeleting === faqToDelete?.id ? "Deleting..." : "Delete"}
+              {isDeleting === faqToDelete?.id ? "Menghapus..." : "Hapus"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

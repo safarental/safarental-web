@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import AppHeader from './AppHeader';
-import { Loader2, Building, LayoutDashboard, UserCircle, Car, ImageIcon as ImageIconLucide, Settings, HelpCircle } from 'lucide-react'; // Added Settings, HelpCircle icons
+import { Loader2, Building, LayoutDashboard, UserCircle, Car, ImageIcon as ImageIconLucide, Settings, HelpCircle } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -58,11 +58,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <SidebarMenuButton
                 asChild
                 isActive={pathname === '/admin/dashboard'}
-                tooltip={{ children: "Dashboard", side: "right", align: "center" }}
+                tooltip={{ children: "Dasbor", side: "right", align: "center" }}
               >
                 <Link href="/admin/dashboard">
                   <LayoutDashboard />
-                  <span>Dashboard</span>
+                  <span>Dasbor</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -70,11 +70,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <SidebarMenuButton
                 asChild
                 isActive={pathname.startsWith('/admin/cars')}
-                tooltip={{ children: "Cars Management", side: "right", align: "center" }}
+                tooltip={{ children: "Manajemen Mobil", side: "right", align: "center" }}
               >
                 <Link href="/admin/cars">
                   <Car />
-                  <span>Cars</span>
+                  <span>Mobil</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -82,11 +82,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <SidebarMenuButton
                 asChild
                 isActive={pathname.startsWith('/admin/galleries')}
-                tooltip={{ children: "Galleries", side: "right", align: "center" }}
+                tooltip={{ children: "Galeri", side: "right", align: "center" }}
               >
                 <Link href="/admin/galleries">
                   <ImageIconLucide />
-                  <span>Galleries</span>
+                  <span>Galeri</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -94,7 +94,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <SidebarMenuButton
                 asChild
                 isActive={pathname.startsWith('/admin/meta-web')}
-                tooltip={{ children: "Website Settings", side: "right", align: "center" }}
+                tooltip={{ children: "Pengaturan Website", side: "right", align: "center" }}
               >
                 <Link href="/admin/meta-web">
                   <Settings />
@@ -106,11 +106,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <SidebarMenuButton
                 asChild
                 isActive={pathname.startsWith('/admin/faqs')}
-                tooltip={{ children: "FAQs", side: "right", align: "center" }}
+                tooltip={{ children: "Tanya Jawab", side: "right", align: "center" }}
               >
                 <Link href="/admin/faqs">
                   <HelpCircle />
-                  <span>FAQs</span>
+                  <span>Tanya Jawab</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -118,11 +118,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <SidebarMenuButton
                 asChild
                 isActive={pathname === '/profile'}
-                tooltip={{ children: "Profile", side: "right", align: "center" }}
+                tooltip={{ children: "Profil", side: "right", align: "center" }}
               >
                 <Link href="/profile">
                   <UserCircle />
-                  <span>Profile</span>
+                  <span>Profil</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -148,7 +148,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <footer className="border-t bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between gap-4 md:h-20 md:flex-row py-6">
             <p className="text-balance text-center text-sm leading-loose text-muted-foreground md:text-left">
-              © {new Date().getFullYear()} Adminify. All rights reserved.
+              © {new Date().getFullYear()} Adminify. Hak cipta dilindungi.
             </p>
           </div>
         </footer>

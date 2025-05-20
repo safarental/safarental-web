@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useFormContext } from "react-hook-form";
@@ -26,9 +27,9 @@ export function AuthFormFields({ includeName = false, includeConfirmPassword = f
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Nama</FormLabel>
               <FormControl>
-                <Input placeholder="Your Name" {...field} />
+                <Input placeholder="Nama Anda" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -42,7 +43,7 @@ export function AuthFormFields({ includeName = false, includeConfirmPassword = f
           <FormItem>
             <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input type="email" placeholder="your@email.com" {...field} />
+              <Input type="email" placeholder="anda@email.com" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -53,7 +54,7 @@ export function AuthFormFields({ includeName = false, includeConfirmPassword = f
         name="password"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Password</FormLabel>
+            <FormLabel>Kata Sandi</FormLabel>
             <FormControl>
               <Input type="password" placeholder="••••••••" {...field} />
             </FormControl>
@@ -67,7 +68,7 @@ export function AuthFormFields({ includeName = false, includeConfirmPassword = f
           name="password_confirmation"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>Konfirmasi Kata Sandi</FormLabel>
               <FormControl>
                 <Input type="password" placeholder="••••••••" {...field} />
               </FormControl>

@@ -23,7 +23,6 @@ interface GalleryFormProps {
   formDescription?: string;
 }
 
-// Helper function to construct the full image URL for galleries
 const getGalleryImageUrl = (relativePath: string | null | undefined): string | null => {
   if (!relativePath) return null;
   if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
@@ -31,7 +30,6 @@ const getGalleryImageUrl = (relativePath: string | null | undefined): string | n
   }
 
   let appBaseUrl = API_BASE_URL;
-  // Strip /api or /api/ from the end of API_BASE_URL to get the app's base URL
   if (appBaseUrl.endsWith('/api')) {
     appBaseUrl = appBaseUrl.slice(0, -4);
   } else if (appBaseUrl.endsWith('/api/')) {
@@ -39,10 +37,7 @@ const getGalleryImageUrl = (relativePath: string | null | undefined): string | n
   }
   
   const cleanAppBaseUrl = appBaseUrl.endsWith('/') ? appBaseUrl.slice(0, -1) : appBaseUrl;
-  // Ensure no double slashes if relativePath starts with one
   const cleanRelativePath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
-
-  // For galleries, the path is relative to 'storage/', e.g., 'galleries/image.jpg'
   return `${cleanAppBaseUrl}/storage/${cleanRelativePath}`;
 };
 
@@ -51,9 +46,9 @@ export function GalleryForm({
   onSubmit,
   initialData,
   isSubmitting,
-  submitButtonText = "Submit",
-  formTitle = "Gallery Item Details",
-  formDescription = "Fill in the details for the gallery item."
+  submitButtonText = "Kirim",
+  formTitle = "Detail Item Galeri",
+  formDescription = "Isi detail untuk item galeri."
 }: GalleryFormProps) {
   const form = useForm<GalleryFormValues>({
     resolver: zodResolver(gallerySchema),
@@ -86,9 +81,9 @@ export function GalleryForm({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>Judul</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Beautiful Sunset" {...field} />
+                    <Input placeholder="cth., Matahari Terbenam yang Indah" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,9 +95,9 @@ export function GalleryForm({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>Deskripsi (Opsional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="A short description of the image..." {...field} value={field.value ?? ""} />
+                    <Textarea placeholder="Deskripsi singkat tentang gambar..." {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,11 +107,11 @@ export function GalleryForm({
             <div>
               {currentPictureUrl && (
                 <div className="mb-2">
-                  <FormLabel>Current Picture</FormLabel>
+                  <FormLabel>Gambar Saat Ini</FormLabel>
                   <div className="mt-1">
                     <Image 
                       src={currentPictureUrl} 
-                      alt={initialData?.title || "Current gallery image"} 
+                      alt={initialData?.title || "Gambar galeri saat ini"} 
                       width={150} 
                       height={100} 
                       className="rounded-md border object-cover"
@@ -130,7 +125,7 @@ export function GalleryForm({
                 name="picture_upload"
                 render={({ field: { onChange, value, ...rest } }) => ( 
                   <FormItem>
-                    <FormLabel>{currentPictureUrl ? "Upload New Picture (Optional)" : "Picture (Optional, max 2MB)"}</FormLabel>
+                    <FormLabel>{currentPictureUrl ? "Unggah Gambar Baru (Opsional)" : "Gambar (Opsional, maks 2MB)"}</FormLabel>
                     <FormControl>
                       <Input
                         type="file"

@@ -36,7 +36,7 @@ export default function CarsPage() {
       const data: PaginatedCarsResponse = await response.json();
       setCarsResponse(data);
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch cars.');
+      setError(err.message || 'Gagal memuat data mobil.');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -55,11 +55,11 @@ export default function CarsPage() {
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to delete car.');
+        throw new Error(data.message || 'Gagal menghapus mobil.');
       }
       toast({
-        title: 'Success!',
-        description: 'Car deleted successfully.',
+        title: 'Sukses!',
+        description: 'Mobil berhasil dihapus.',
       });
       // Refetch cars for the current page
       // If it was the last item on a page beyond page 1, go to previous page
@@ -71,7 +71,7 @@ export default function CarsPage() {
     } catch (error: any) {
       toast({
         title: 'Error',
-        description: error.message || 'An unexpected error occurred.',
+        description: error.message || 'Terjadi kesalahan tak terduga.',
         variant: 'destructive',
       });
     } finally {
@@ -87,11 +87,11 @@ export default function CarsPage() {
     <AppLayout>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <h1 className="text-3xl font-bold">Cars Management</h1>
+          <h1 className="text-3xl font-bold">Manajemen Mobil</h1>
           <Button asChild>
             <Link href="/admin/cars/create">
               <PlusCircle className="mr-2 h-5 w-5" />
-              Add New Car
+              Tambah Mobil Baru
             </Link>
           </Button>
         </div>
@@ -99,7 +99,7 @@ export default function CarsPage() {
         {isLoading && (
           <div className="flex justify-center items-center py-10">
             <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            <p className="ml-2">Loading cars...</p>
+            <p className="ml-2">Memuat mobil...</p>
           </div>
         )}
 
@@ -107,12 +107,12 @@ export default function CarsPage() {
           <Card className="border-destructive bg-destructive/10">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-destructive">
-                <AlertTriangle /> Error Fetching Cars
+                <AlertTriangle /> Gagal Memuat Mobil
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-destructive">{error}</p>
-              <Button onClick={() => fetchCars(currentPage)} className="mt-4">Retry</Button>
+              <Button onClick={() => fetchCars(currentPage)} className="mt-4">Coba Lagi</Button>
             </CardContent>
           </Card>
         )}
@@ -124,7 +124,7 @@ export default function CarsPage() {
                 <div className="flex items-center justify-between pt-4">
                     <div>
                         <p className="text-sm text-muted-foreground">
-                            Showing {carsResponse.data.from} to {carsResponse.data.to} of {carsResponse.data.total} results
+                            Menampilkan {carsResponse.data.from} hingga {carsResponse.data.to} dari {carsResponse.data.total} hasil
                         </p>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -135,16 +135,16 @@ export default function CarsPage() {
                             disabled={!carsResponse.data.prev_page_url}
                         >
                             <ChevronLeft className="h-4 w-4 mr-1" />
-                            Previous
+                            Sebelumnya
                         </Button>
-                        <span className="text-sm">Page {currentPage} of {carsResponse.data.last_page}</span>
+                        <span className="text-sm">Halaman {currentPage} dari {carsResponse.data.last_page}</span>
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={!carsResponse.data.next_page_url}
                         >
-                            Next
+                            Berikutnya
                             <ChevronRight className="h-4 w-4 ml-1" />
                         </Button>
                     </div>
