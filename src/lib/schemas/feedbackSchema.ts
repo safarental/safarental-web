@@ -9,8 +9,8 @@ export const feedbackSchema = z.object({
   rate: z.coerce
     .number({ required_error: "Rating wajib dipilih.", invalid_type_error: "Rating harus berupa angka." })
     .int()
-    .min(1, { message: 'Rating minimal adalah 1.' })
-    .max(5, { message: 'Rating maksimal adalah 5.' }),
+    .min(1, { message: 'Rating minimal adalah 1 bintang.' }) // Updated error message
+    .max(5, { message: 'Rating maksimal adalah 5 bintang.' }), // Updated error message
   feedback: z.string().optional().nullable(),
 });
 

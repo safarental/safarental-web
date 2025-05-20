@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { CarListSection } from '@/components/landing/CarListSection'; 
-import { FeedbackForm } from '@/components/landing/FeedbackForm'; // Import FeedbackForm
+import { FeedbackForm } from '@/components/landing/FeedbackForm';
 import { getPublicStorageUrl } from '@/lib/imageUtils';
 import { Mail, MapPin, MessageCircle as MessageCircleIcon, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles, MessageSquare } from 'lucide-react';
 
@@ -20,12 +20,10 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     }
     const responseData: LandingPageApiResponse = await response.json();
     
-    // Fallback untuk meta_web jika null atau propertinya null
     if (!responseData.meta_web) {
       responseData.meta_web = {
         website_name: "Rental Mobil Kami",
         description: "Deskripsi default jika tidak ada dari API."
-        // properti lain seperti whatsapp, instagram, dll akan undefined jika tidak ada
       };
     } else {
       if (responseData.meta_web.website_name === null || responseData.meta_web.website_name === undefined) {
@@ -36,7 +34,6 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
       }
     }
 
-    // Pastikan price pada mobil adalah string
     if (responseData.mobils) {
       responseData.mobils = responseData.mobils.map((mobil) => ({
         ...mobil,
@@ -82,7 +79,7 @@ export default async function LandingPage() {
   return (
     <div className="bg-background text-foreground">
       {/* Hero Section */}
-      <header className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground py-20 px-4 shadow-lg">
+      <header className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground py-20 px-6 sm:px-10 lg:px-16 shadow-lg">
         <div className="container mx-auto text-center">
           <h1 className="text-5xl font-bold mb-4 tracking-tight">Selamat Datang di {websiteName}</h1>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
@@ -95,7 +92,7 @@ export default async function LandingPage() {
       </header>
 
       {/* Keunggulan Section */}
-      <section id="excellence" className="py-16 px-4">
+      <section id="excellence" className="py-16 px-6 sm:px-10 lg:px-16">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-4 text-primary">Rasakan Bedanya, Nikmati Keunggulannya!</h2>
           <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
@@ -124,7 +121,7 @@ export default async function LandingPage() {
       <CarListSection mobils={mobils || []} meta_web={meta_web} websiteName={websiteName} />
 
       {/* Kenapa Memilih Kami Section */}
-      <section id="why-us" className="py-16 px-4">
+      <section id="why-us" className="py-16 px-6 sm:px-10 lg:px-16">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-4 text-primary">Pilihan Cerdas untuk Setiap Perjalanan Anda</h2>
           <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
@@ -151,7 +148,7 @@ export default async function LandingPage() {
 
       {/* Gallery Section */}
       {galleries && galleries.length > 0 && (
-        <section id="gallery" className="py-16 px-4 bg-muted/30">
+        <section id="gallery" className="py-16 px-6 sm:px-10 lg:px-16 bg-muted/30">
           <div className="container mx-auto">
             <h2 className="text-4xl font-bold text-center mb-4 text-primary flex items-center justify-center"><Images className="mr-3 h-10 w-10" /> Galeri Kami</h2>
             <p className="text-lg text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
@@ -179,14 +176,13 @@ export default async function LandingPage() {
 
       {/* Testimoni Section */}
       {testimonis && testimonis.length > 0 && (
-        <section id="testimonials" className="py-16 px-4">
+        <section id="testimonials" className="py-16 px-6 sm:px-10 lg:px-16">
           <div className="container mx-auto">
             <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><Users className="mr-3 h-10 w-10" /> Kata Pelanggan Kami</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {testimonis.map((testimoni) => (
                 <Card key={testimoni.id} className="shadow-lg flex flex-col items-center text-center p-6">
                   <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-primary bg-gray-200 flex items-center justify-center">
-                    {/* Placeholder for testimoni image or initial */}
                     <span className="text-3xl font-semibold text-primary">
                       {testimoni.name ? testimoni.name.substring(0, 1).toUpperCase() : 'P'}
                     </span>
@@ -208,7 +204,7 @@ export default async function LandingPage() {
       )}
 
       {/* Feedback Form Section */}
-      <section id="feedback" className="py-16 px-4 bg-muted/30">
+      <section id="feedback" className="py-16 px-6 sm:px-10 lg:px-16 bg-muted/30">
         <div className="container mx-auto max-w-2xl">
            <FeedbackForm />
         </div>
@@ -216,7 +212,7 @@ export default async function LandingPage() {
 
       {/* FAQ Section */}
       {faqs && faqs.length > 0 && (
-        <section id="faq" className="py-16 px-4">
+        <section id="faq" className="py-16 px-6 sm:px-10 lg:px-16">
           <div className="container mx-auto max-w-3xl">
             <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><HelpCircle className="mr-3 h-10 w-10" /> Pertanyaan Umum</h2>
             <Accordion type="single" collapsible className="w-full">
@@ -236,7 +232,7 @@ export default async function LandingPage() {
       )}
 
       {/* Footer Section */}
-      <footer className="bg-primary text-primary-foreground py-12 px-4">
+      <footer className="bg-primary text-primary-foreground py-12 px-6 sm:px-10 lg:px-16">
         <div className="container mx-auto text-center md:text-left">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
             <div>
@@ -280,3 +276,5 @@ export default async function LandingPage() {
     </div>
   );
 }
+
+    

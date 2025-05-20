@@ -142,11 +142,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </Sidebar>
       <SidebarInset>
         <AppHeader />
-        <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="flex-1 container mx-auto px-6 sm:px-10 lg:px-16 py-8">
           {children}
         </main>
         <footer className="border-t bg-background">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between gap-4 md:h-20 md:flex-row py-6">
+          <div className="container mx-auto px-6 sm:px-10 lg:px-16 flex flex-col items-center justify-between gap-4 md:h-20 md:flex-row py-6">
             <p className="text-balance text-center text-sm leading-loose text-muted-foreground md:text-left">
               © {new Date().getFullYear()} Adminify. Hak cipta dilindungi.
             </p>
@@ -156,3 +156,5 @@ export default function AppLayout({ children }: AppLayoutProps) {
     </SidebarProvider>
   );
 }
+
+    

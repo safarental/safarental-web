@@ -16,14 +16,15 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from '@/hooks/use-toast';
 import { API_BASE_URL } from '@/config';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Star } from 'lucide-react';
+import { cn } from "@/lib/utils"; // Added missing import
 
 export function FeedbackForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hoverRating, setHoverRating] = useState(0);
   const { toast } = useToast();
 
   const form = useForm<FeedbackFormValues>({
@@ -31,7 +32,7 @@ export function FeedbackForm() {
     defaultValues: {
       name: '',
       email: '',
-      rate: undefined, // Initially no rating selected
+      rate: 0, // Initialize with 0 or undefined, 0 means no stars selected
       feedback: '',
     },
   });
@@ -52,7 +53,6 @@ export function FeedbackForm() {
 
       if (!response.ok) {
         if (response.status === 422 && responseData.errors) {
-          // Handle validation errors
           const errorMessages = Object.values(responseData.errors).flat().join(' ');
           throw new Error(errorMessages || 'Validasi gagal. Periksa kembali isian Anda.');
         }
@@ -63,7 +63,8 @@ export function FeedbackForm() {
         title: 'Sukses!',
         description: responseData.message || 'Feedback Anda telah berhasil dikirim. Terima kasih!',
       });
-      form.reset();
+      form.reset({ name: '', email: '', rate: 0, feedback: '' }); // Reset with 0 rating
+      setHoverRating(0);
     } catch (error: any) {
       toast({
         title: 'Gagal Mengirim Feedback',
@@ -114,25 +115,25 @@ export function FeedbackForm() {
               control={form.control}
               name="rate"
               render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel>Rating Anda (1-5 Bintang)</FormLabel>
+                <FormItem>
+                  <FormLabel>Rating Anda</FormLabel>
                   <FormControl>
-                    <RadioGroup
-                      onValueChange={(value) => field.onChange(parseInt(value))}
-                      defaultValue={field.value?.toString()}
-                      className="flex space-x-2 items-center"
-                    >
-                      {[1, 2, 3, 4, 5].map((rateValue) => (
-                        <FormItem key={rateValue} className="flex items-center space-x-1 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value={rateValue.toString()} id={`rate-${rateValue}`} />
-                          </FormControl>
-                          <FormLabel htmlFor={`rate-${rateValue}`} className="font-normal flex items-center cursor-pointer">
-                            {rateValue} <Star className="ml-1 h-4 w-4 text-yellow-400 fill-yellow-400" />
-                          </FormLabel>
-                        </FormItem>
+                    <div className="flex items-center space-x-1">
+                      {[1, 2, 3, 4, 5].map((starValue) => (
+                        <Star
+                          key={starValue}
+                          className={cn(
+                            'h-7 w-7 cursor-pointer transition-colors',
+                            (hoverRating || field.value || 0) >= starValue
+                              ? 'text-yellow-400 fill-yellow-400'
+                              : 'text-gray-300 hover:text-yellow-300'
+                          )}
+                          onClick={() => field.onChange(starValue)}
+                          onMouseEnter={() => setHoverRating(starValue)}
+                          onMouseLeave={() => setHoverRating(0)}
+                        />
                       ))}
-                    </RadioGroup>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

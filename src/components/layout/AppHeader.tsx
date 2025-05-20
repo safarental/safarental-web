@@ -36,11 +36,10 @@ export default function AppHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"> {/* z-index adjusted for sidebar */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-6 sm:px-10 lg:px-16 flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <SidebarTrigger className="mr-2 md:hidden" /> {/* Trigger for mobile, hidden on md+ */}
-           {/* Desktop sidebar is toggled by its rail or keyboard shortcut, so the trigger can be hidden on desktop if preferred */}
+          <SidebarTrigger className="mr-2 md:hidden" /> 
           <Link href="/admin/dashboard" className="flex items-center gap-2">
             <Building className="h-7 w-7 text-primary" />
             <span className="text-xl font-bold text-primary">Adminify</span>
@@ -98,3 +97,5 @@ export default function AppHeader() {
     </header>
   );
 }
+
+    

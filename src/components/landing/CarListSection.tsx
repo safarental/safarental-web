@@ -63,7 +63,7 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
   const whatsappNumber = meta_web?.whatsapp ? cleanWhatsAppNumber(meta_web.whatsapp) : null;
 
   return (
-    <section id="cars" className="py-16 px-4 bg-muted/30">
+    <section id="cars" className="py-16 px-6 sm:px-10 lg:px-16 bg-muted/30">
       <div className="container mx-auto">
         <h2 className="text-4xl font-bold text-center mb-4 text-primary flex items-center justify-center">
           <CarIcon className="mr-3 h-10 w-10" /> Armada Pilihan Kami
@@ -188,7 +188,7 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
                     <h4 className="font-semibold text-md text-foreground flex items-center"><Info className="mr-2 h-5 w-5 text-primary" /> Deskripsi</h4>
                     <p className="text-sm text-muted-foreground">{selectedCar.description || 'Tidak ada deskripsi tambahan.'}</p>
                   </div>
-                  <div className="space-y-1 mt-auto md:mt-0"> {/* Pushes price to bottom in flex col */}
+                  <div className="space-y-1 mt-auto md:mt-0"> 
                     <h4 className="font-semibold text-md text-foreground flex items-center"><DollarSign className="mr-2 h-5 w-5 text-primary" /> Harga Sewa</h4>
                     <p className="text-2xl font-bold text-accent">Rp {formatPriceForDisplay(selectedCar.price)} / hari</p>
                   </div>
@@ -221,3 +221,4 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
   );
 }
 
+    
