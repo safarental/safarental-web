@@ -1,14 +1,14 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { AuthFormFields } from '@/components/AuthFormFields';
 import { useAuth } from '@/contexts/AuthContext';
@@ -78,14 +78,7 @@ export default function LoginPage() {
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="flex flex-col items-center space-y-2">
-          <p className="text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link href="/register" className="font-medium text-primary hover:underline">
-              Register
-            </Link>
-          </p>
-        </CardFooter>
+        {/* CardFooter containing the registration link is removed */}
       </Card>
     </div>
   );
