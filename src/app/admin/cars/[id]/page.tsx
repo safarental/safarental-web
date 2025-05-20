@@ -14,14 +14,23 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Edit, Loader2, AlertTriangle, Car, Tag, CalendarDays, Settings, Users, DollarSign, Info, ImageIcon } from 'lucide-react';
 
-const isValidHttpUrl = (string: string | null | undefined): boolean => {
-  if (!string) return false;
-  try {
-    const url = new URL(string);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch (_) {
-    return false;
+const getFullImageUrl = (relativePath: string | null | undefined): string | null => {
+  if (!relativePath) return null;
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    return relativePath;
   }
+
+  let appBaseUrl = API_BASE_URL;
+  if (appBaseUrl.endsWith('/api')) {
+    appBaseUrl = appBaseUrl.slice(0, -4);
+  } else if (appBaseUrl.endsWith('/api/')) {
+    appBaseUrl = appBaseUrl.slice(0, -5);
+  }
+  
+  const cleanAppBaseUrl = appBaseUrl.endsWith('/') ? appBaseUrl.slice(0, -1) : appBaseUrl;
+  const cleanRelativePath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
+  
+  return `${cleanAppBaseUrl}/${cleanRelativePath}`;
 };
 
 export default function ViewCarPage() {
@@ -143,9 +152,9 @@ export default function ViewCarPage() {
     }
   };
 
-  const imageSrc = isValidHttpUrl(car.picture_upload) 
-    ? car.picture_upload!
-    : `https://placehold.co/200x150.png`;
+  const imageSrc = getFullImageUrl(car.picture_upload) || `https://placehold.co/200x150.png`;
+  const displayImageUrl = getFullImageUrl(car.picture_upload);
+
 
   return (
     <AppLayout>
@@ -195,7 +204,13 @@ export default function ViewCarPage() {
             <DetailItem icon={Settings} label="Transmission" value={car.transmission} />
             <DetailItem icon={Users} label="Seat Capacity" value={`${car.seat} seats`} />
             <DetailItem icon={DollarSign} label="Price per Day" value={`Rp ${car.price.toLocaleString('id-ID')}`} />
-            <DetailItem icon={ImageIcon} label="Image URL" value={isValidHttpUrl(car.picture_upload) ? <a href={car.picture_upload!} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate block max-w-xs">{car.picture_upload}</a> : 'N/A'} />
+            <DetailItem 
+                icon={ImageIcon} 
+                label="Image URL" 
+                value={displayImageUrl ? 
+                    <a href={displayImageUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate block max-w-xs">{displayImageUrl}</a> 
+                    : 'N/A'} 
+            />
             <div className="md:col-span-2 lg:col-span-3">
                  <DetailItem icon={Info} label="Description" value={car.description || 'No description provided.'} />
             </div>

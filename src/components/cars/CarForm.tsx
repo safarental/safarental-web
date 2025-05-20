@@ -12,8 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import Image from "next/image"; // Import next/image
-import { API_BASE_URL } from "@/config"; // For constructing image URL if needed
+import Image from "next/image";
+import { API_BASE_URL } from "@/config";
 
 interface CarFormProps {
   onSubmit: (values: CarFormValues) => Promise<void>;
@@ -24,22 +24,25 @@ interface CarFormProps {
   formDescription?: string;
 }
 
-// Helper to construct full image URL if picture_upload is a relative path
 const getFullImageUrl = (relativePath: string | null | undefined): string | null => {
   if (!relativePath) return null;
   if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
     return relativePath;
   }
-  // Assuming API_BASE_URL is like "https://yourdomain.com/api"
-  // and relativePath is like "storage/mobil_pictures/image.jpg"
-  // Then the image is at "https://yourdomain.com/storage/mobil_pictures/image.jpg"
+
   let appBaseUrl = API_BASE_URL;
-  if (API_BASE_URL.endsWith('/api')) {
-    appBaseUrl = API_BASE_URL.slice(0, -4);
-  } else if (API_BASE_URL.endsWith('/api/')) {
-    appBaseUrl = API_BASE_URL.slice(0, -5);
+  // Strip /api or /api/ from the end of API_BASE_URL to get the app's base URL
+  if (appBaseUrl.endsWith('/api')) {
+    appBaseUrl = appBaseUrl.slice(0, -4);
+  } else if (appBaseUrl.endsWith('/api/')) {
+    appBaseUrl = appBaseUrl.slice(0, -5);
   }
-  return `${appBaseUrl}/${relativePath}`;
+
+  // Ensure single slash between base URL and relative path
+  const cleanAppBaseUrl = appBaseUrl.endsWith('/') ? appBaseUrl.slice(0, -1) : appBaseUrl;
+  const cleanRelativePath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
+  
+  return `${cleanAppBaseUrl}/${cleanRelativePath}`;
 };
 
 
@@ -240,7 +243,7 @@ export function CarForm({
                   </FormItem>
                 )}
               />
-              <div className="md:col-span-2"> {/* Make image upload span 2 cols if needed */}
+              <div className="md:col-span-2">
                 {currentPictureUrl && (
                   <div className="mb-2">
                     <FormLabel>Current Picture</FormLabel>
@@ -258,8 +261,8 @@ export function CarForm({
                 )}
                 <FormField
                   control={form.control}
-                  name="picture_upload" // This will hold the FileList object
-                  render={({ field: { onChange, value, ...rest } }) => ( // `value` here is what RHF tracks for this field
+                  name="picture_upload"
+                  render={({ field: { onChange, value, ...rest } }) => ( 
                     <FormItem>
                       <FormLabel>{currentPictureUrl ? "Upload New Picture (Optional)" : "Picture (Optional, max 2MB)"}</FormLabel>
                       <FormControl>
@@ -267,9 +270,9 @@ export function CarForm({
                           type="file"
                           accept="image/jpeg,image/png,image/jpg,image/gif"
                           onChange={(e) => {
-                            onChange(e.target.files); // Pass FileList to RHF
+                            onChange(e.target.files); 
                           }}
-                          {...rest} // Pass name, ref, onBlur from RHF
+                          {...rest} 
                         />
                       </FormControl>
                       <FormMessage />

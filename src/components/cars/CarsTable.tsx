@@ -27,21 +27,31 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from 'react';
+import { API_BASE_URL } from '@/config';
 
 interface CarsTableProps {
   carsResponse: PaginatedCarsResponse | null;
   onDelete: (id: number) => Promise<void>;
-  isDeleting: number | null; // Store ID of car being deleted
+  isDeleting: number | null; 
 }
 
-const isValidHttpUrl = (string: string | null | undefined): boolean => {
-  if (!string) return false;
-  try {
-    const url = new URL(string);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch (_) {
-    return false;
+const getFullImageUrl = (relativePath: string | null | undefined): string | null => {
+  if (!relativePath) return null;
+  if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
+    return relativePath;
   }
+
+  let appBaseUrl = API_BASE_URL;
+  if (appBaseUrl.endsWith('/api')) {
+    appBaseUrl = appBaseUrl.slice(0, -4);
+  } else if (appBaseUrl.endsWith('/api/')) {
+    appBaseUrl = appBaseUrl.slice(0, -5);
+  }
+  
+  const cleanAppBaseUrl = appBaseUrl.endsWith('/') ? appBaseUrl.slice(0, -1) : appBaseUrl;
+  const cleanRelativePath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
+  
+  return `${cleanAppBaseUrl}/${cleanRelativePath}`;
 };
 
 export function CarsTable({ carsResponse, onDelete, isDeleting }: CarsTableProps) {
@@ -112,9 +122,7 @@ export function CarsTable({ carsResponse, onDelete, isDeleting }: CarsTableProps
         </TableHeader>
         <TableBody>
           {cars.map((car) => {
-            const imageSrc = isValidHttpUrl(car.picture_upload) 
-              ? car.picture_upload! 
-              : `https://placehold.co/100x70.png`;
+            const imageSrc = getFullImageUrl(car.picture_upload) || `https://placehold.co/100x70.png`;
             return (
               <TableRow key={car.id}>
                 <TableCell>
