@@ -1,12 +1,12 @@
 
 import type { LandingPageApiResponse } from '@/types/LandingPageData';
 import { API_BASE_URL } from '@/config';
-import { getPublicStorageUrl } from '@/lib/imageUtils';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { CarListSection } from '@/components/landing/CarListSection'; 
+import { getPublicStorageUrl } from '@/lib/imageUtils'; // Added import
 import { Mail, MapPin, MessageCircle as MessageCircleIcon, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles } from 'lucide-react';
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
@@ -17,13 +17,25 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
       console.error("Gagal memuat data landing page:", response.status, errorText);
       return null;
     }
-    const responseData = await response.json();
-    if (responseData.meta_web && responseData.meta_web.website_name === null) {
-        // API might return null for website_name, provide a default
-        responseData.meta_web.website_name = "Rental Mobil Kami";
+    const responseData: LandingPageApiResponse = await response.json();
+    
+    // Provide default values if API returns null for certain meta_web fields
+    if (!responseData.meta_web) {
+      responseData.meta_web = {
+        website_name: "Rental Mobil Kami",
+        description: "Deskripsi default jika tidak ada dari API."
+      };
+    } else {
+      if (responseData.meta_web.website_name === null || responseData.meta_web.website_name === undefined) {
+          responseData.meta_web.website_name = "Rental Mobil Kami";
+      }
+       if (responseData.meta_web.description === null || responseData.meta_web.description === undefined) {
+          responseData.meta_web.description = "Deskripsi default jika tidak ada dari API.";
+      }
     }
+
     if (responseData.mobils) {
-      responseData.mobils = responseData.mobils.map((mobil: any) => ({
+      responseData.mobils = responseData.mobils.map((mobil) => ({
         ...mobil,
         price: String(mobil.price) 
       }));
@@ -61,14 +73,6 @@ export default async function LandingPage() {
     ));
   };
   
-  const formatPrice = (priceString: string | number): string => {
-    const priceNumber = typeof priceString === 'string' ? parseFloat(priceString) : priceString;
-    if (isNaN(priceNumber)) {
-        return 'N/A';
-    }
-    return priceNumber.toLocaleString('id-ID');
-  };
-
   const websiteName = meta_web?.website_name || "Rental Mobil Kami";
 
 
@@ -111,37 +115,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {mobils && mobils.length > 0 && (
-        <section id="cars" className="py-16 px-4 bg-muted/30">
-          <div className="container mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><Car className="mr-3 h-10 w-10" /> Armada Kami</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {mobils.map((mobil) => (
-                <Card key={mobil.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                  <div className="relative w-full h-56">
-                    <Image
-                      src={getPublicStorageUrl(mobil.picture_upload) || `https://placehold.co/600x400.png`}
-                      alt={`${mobil.merk} ${mobil.model}`}
-                      layout="fill"
-                      objectFit="cover"
-                      data-ai-hint={`${mobil.category} car`}
-                    />
-                  </div>
-                  <CardHeader>
-                    <CardTitle className="text-xl font-semibold">{mobil.merk} {mobil.model}</CardTitle>
-                    <CardDescription>{mobil.category} - {mobil.year}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <p className="text-sm text-muted-foreground mb-1">Transmisi: {mobil.transmission}</p>
-                    <p className="text-sm text-muted-foreground mb-3">Kursi: {mobil.seat}</p>
-                    <p className="text-lg font-bold text-primary">Rp {formatPrice(mobil.price)} / hari</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      <CarListSection mobils={mobils || []} meta_web={meta_web} websiteName={websiteName} />
 
       <section id="why-us" className="py-16 px-4">
         <div className="container mx-auto">
@@ -171,16 +145,14 @@ export default async function LandingPage() {
       {galleries && galleries.length > 0 && (
         <section id="gallery" className="py-16 px-4 bg-muted/30">
           <div className="container mx-auto">
-            <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><Images className="mr-3 h-10 w-10" /> Galeri</h2>
+            <h2 className="text-4xl font-bold text-center mb-12 text-primary flex items-center justify-center"><Images className="mr-3 h-10 w-10" /> Galeri Kami</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {galleries.map((item) => (
                 <div key={item.id} className="relative aspect-square overflow-hidden rounded-lg shadow-lg group">
-                  <Image
+                  <img 
                     src={getPublicStorageUrl(item.picture_upload) || `https://placehold.co/400x400.png`}
                     alt={item.title || 'Gambar galeri'}
-                    layout="fill"
-                    objectFit="cover"
-                    className="transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     data-ai-hint="activity travel"
                   />
                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4 text-center">
@@ -202,6 +174,7 @@ export default async function LandingPage() {
               {testimonis.map((testimoni) => (
                 <Card key={testimoni.id} className="shadow-lg flex flex-col items-center text-center p-6">
                   <div className="relative w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-primary bg-gray-200 flex items-center justify-center">
+                    {/* Placeholder for testimoni image or initial */}
                     <span className="text-3xl font-semibold text-primary">
                       {testimoni.name ? testimoni.name.substring(0, 1).toUpperCase() : 'P'}
                     </span>
@@ -212,7 +185,7 @@ export default async function LandingPage() {
                       {renderStars(testimoni.rate)}
                     </div>
                   )}
-                  <CardContent className="text-sm text-muted-foreground italic">
+                  <CardContent className="text-sm text-muted-foreground italic p-0">
                     "{testimoni.feedback}"
                   </CardContent>
                 </Card>
