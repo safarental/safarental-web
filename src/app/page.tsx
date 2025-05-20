@@ -8,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { CarListSection } from '@/components/landing/CarListSection';
 import { FeedbackForm } from '@/components/landing/FeedbackForm';
 import { GallerySection } from '@/components/landing/GallerySection';
-import { TestimonialsSection } from '@/components/landing/TestimonialsSection'; // Import baru
+import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
 import { getPublicStorageUrl } from '@/lib/imageUtils';
 import { Mail, MapPin, Instagram, Star, ChevronRight, Car, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles, MessageSquare } from 'lucide-react';
 
@@ -22,6 +22,7 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     }
     const responseData: LandingPageApiResponse = await response.json();
 
+    // Default values for meta_web if it's null or some fields are missing
     if (!responseData.meta_web) {
       responseData.meta_web = {
         website_name: "Rental Mobil Kami",
@@ -40,6 +41,7 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
       }
     }
     
+    // Ensure car prices are strings as expected by CarListSection for display consistency
     if (responseData.mobils) {
       responseData.mobils = responseData.mobils.map((mobil) => ({
         ...mobil,
@@ -199,7 +201,7 @@ export default async function LandingPage() {
       <footer className="bg-primary text-primary-foreground py-12 px-6 sm:px-10 lg:px-16">
         <div className="container mx-auto text-center md:text-left">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            <div>
+            <div className={!meta_web ? "md:col-span-3 md:text-center" : ""}>
               <h3 className="text-2xl font-bold mb-2">{websiteName}</h3>
               <p className="text-sm opacity-80">Perjalanan berkualitas, harga tak terkalahkan.</p>
             </div>
