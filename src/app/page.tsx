@@ -11,10 +11,10 @@ import { GallerySection } from '@/components/landing/GallerySection';
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
 import { ChevronRight, Car as CarIconLucide, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles } from 'lucide-react';
 import PublicPageLayout from '@/components/layout/PublicPageLayout';
+import { getPublicStorageUrl } from '@/lib/imageUtils'; // Pastikan ini diimpor jika digunakan di sini (mis. untuk gambar galeri langsung)
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
   try {
-    // Tambahkan { cache: 'no-store' } untuk memastikan data selalu baru
     const response = await fetch(`${API_BASE_URL}/home`, { cache: 'no-store' }); 
     if (!response.ok) {
       const errorText = await response.text();
@@ -23,11 +23,10 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     }
     const responseData: LandingPageApiResponse = await response.json();
 
-    // Fallback untuk meta_web jika tidak ada atau beberapa field kosong
     if (!responseData.meta_web) {
       responseData.meta_web = {
-        website_name: "Rental Mobil Impian", // Nama default yang lebih menarik
-        description: "Solusi rental mobil terbaik dengan armada premium dan layanan prima.", // Deskripsi default
+        website_name: "Safarental", // Diubah
+        description: "Solusi rental mobil terbaik dengan armada premium dan layanan prima.",
         whatsapp: null,
         instagram: null,
         address: null,
@@ -35,18 +34,17 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
       };
     } else {
        if (!responseData.meta_web.website_name) {
-          responseData.meta_web.website_name = "Rental Mobil Impian";
+          responseData.meta_web.website_name = "Safarental"; // Diubah
       }
        if (!responseData.meta_web.description) {
           responseData.meta_web.description = "Solusi rental mobil terbaik dengan armada premium dan layanan prima.";
       }
     }
     
-    // Pastikan harga mobil adalah string
     if (responseData.mobils) {
       responseData.mobils = responseData.mobils.map((mobil) => ({
         ...mobil,
-        price: String(mobil.price) // API mengembalikan harga sebagai string
+        price: String(mobil.price)
       }));
     }
 
@@ -67,14 +65,13 @@ export default async function HomePage() {
           <ServerCrash className="w-16 h-16 text-destructive mb-4" />
           <h1 className="text-3xl font-bold mb-4 text-destructive">Oops! Terjadi kesalahan.</h1>
           <p className="text-lg text-muted-foreground mb-6">Kami tidak dapat memuat konten halaman saat ini. Silakan coba lagi nanti atau hubungi dukungan.</p>
-          {/* Tombol Masuk Admin dihapus dari sini karena akses via URL */}
         </div>
       </PublicPageLayout>
     );
   }
 
   const { meta_web, mobils, galleries, testimonis, faqs } = data;
-  const websiteName = meta_web?.website_name || "Rental Mobil Impian"; // Fallback jika nama website null
+  const websiteName = meta_web?.website_name || "Safarental"; // Diubah fallback
 
   return (
     <PublicPageLayout>

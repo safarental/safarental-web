@@ -1,6 +1,6 @@
 
 import type { ReactNode } from 'react';
-import { LandingNavbar } from '@/components/landing/LandingNavbar'; // Di-uncomment dan diimpor
+import { LandingNavbar } from '@/components/landing/LandingNavbar';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { API_BASE_URL } from '@/config';
 import type { LandingPageApiResponse, MetaWebLanding } from '@/types/LandingPageData';
@@ -15,7 +15,7 @@ async function getGlobalMetaWeb(): Promise<MetaWebLanding | null> {
     const data: LandingPageApiResponse = await response.json();
     
     const metaWebDefaults: MetaWebLanding = {
-      website_name: "Rental Mobil Anda",
+      website_name: "Safarental", // Diubah
       description: "Solusi rental mobil terbaik.",
       whatsapp: null,
       instagram: null,
@@ -35,7 +35,7 @@ async function getGlobalMetaWeb(): Promise<MetaWebLanding | null> {
   } catch (error) {
     console.error("Error memuat data meta_web global:", error);
     return {
-      website_name: "Rental Mobil Anda",
+      website_name: "Safarental", // Diubah
       description: "Solusi rental mobil terbaik.",
       whatsapp: null,
       instagram: null,
@@ -54,7 +54,7 @@ export default async function PublicPageLayout({
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <LandingNavbar websiteName={metaWeb?.website_name} /> {/* Navbar dirender di sini */}
+      <LandingNavbar websiteName={metaWeb?.website_name} />
       <main className="flex-1">{children}</main>
       <LandingFooter meta_web={metaWeb} websiteName={metaWeb?.website_name} />
     </div>
