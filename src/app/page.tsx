@@ -11,7 +11,7 @@ import { GallerySection } from '@/components/landing/GallerySection';
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
 import { ChevronRight, Car as CarIconLucide, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles } from 'lucide-react';
 import PublicPageLayout from '@/components/layout/PublicPageLayout';
-import { getPublicStorageUrl } from '@/lib/imageUtils'; // Pastikan ini diimpor jika digunakan di sini (mis. untuk gambar galeri langsung)
+import { getPublicStorageUrl } from '@/lib/imageUtils'; 
 
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
   try {
@@ -23,28 +23,30 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     }
     const responseData: LandingPageApiResponse = await response.json();
 
+    const metaWebDefaults = {
+      website_name: "Safarental",
+      description: "Solusi rental mobil terbaik dengan armada premium dan layanan prima.",
+      whatsapp: null,
+      instagram: null,
+      address: null,
+      email: null
+    };
+
     if (!responseData.meta_web) {
-      responseData.meta_web = {
-        website_name: "Safarental", // Diubah
-        description: "Solusi rental mobil terbaik dengan armada premium dan layanan prima.",
-        whatsapp: null,
-        instagram: null,
-        address: null,
-        email: null
-      };
+      responseData.meta_web = metaWebDefaults;
     } else {
-       if (!responseData.meta_web.website_name) {
-          responseData.meta_web.website_name = "Safarental"; // Diubah
-      }
-       if (!responseData.meta_web.description) {
-          responseData.meta_web.description = "Solusi rental mobil terbaik dengan armada premium dan layanan prima.";
-      }
+       responseData.meta_web.website_name = responseData.meta_web.website_name || metaWebDefaults.website_name;
+       responseData.meta_web.description = responseData.meta_web.description || metaWebDefaults.description;
+       responseData.meta_web.whatsapp = responseData.meta_web.whatsapp || metaWebDefaults.whatsapp;
+       responseData.meta_web.instagram = responseData.meta_web.instagram || metaWebDefaults.instagram;
+       responseData.meta_web.address = responseData.meta_web.address || metaWebDefaults.address;
+       responseData.meta_web.email = responseData.meta_web.email || metaWebDefaults.email;
     }
     
     if (responseData.mobils) {
       responseData.mobils = responseData.mobils.map((mobil) => ({
         ...mobil,
-        price: String(mobil.price)
+        price: String(mobil.price) 
       }));
     }
 
@@ -71,20 +73,20 @@ export default async function HomePage() {
   }
 
   const { meta_web, mobils, galleries, testimonis, faqs } = data;
-  const websiteName = meta_web?.website_name || "Safarental"; // Diubah fallback
+  const websiteName = meta_web?.website_name || "Safarental"; 
 
   return (
     <PublicPageLayout>
       {/* Hero Section */}
       <header className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground py-28 md:py-32 px-6 sm:px-10 lg:px-16 shadow-lg">
         <div className="container mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 tracking-tight !leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 tracking-tight !leading-tight animate-in fade-in slide-in-from-top-10 duration-700">
             Kendaraan Impian, Perjalanan Tak Terlupakan Bersama <span className="text-accent">{websiteName}</span>!
           </h1>
-          <p className="text-lg sm:text-xl mb-10 max-w-3xl mx-auto text-primary-foreground/90">
+          <p className="text-lg sm:text-xl mb-10 max-w-3xl mx-auto text-primary-foreground/90 animate-in fade-in slide-in-from-top-8 duration-700 delay-200">
             Jelajahi armada premium kami, nikmati harga terbaik, dan layanan pelanggan yang siap membuat setiap perjalanan Anda istimewa. Booking mudah, pengalaman tak terlupakan!
           </p>
-          <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg">
+          <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg animate-in fade-in zoom-in-90 duration-700 delay-400">
             <Link href="#cars">Lihat Pilihan Mobil <ChevronRight className="ml-2 h-5 w-5" /></Link>
           </Button>
         </div>
@@ -104,7 +106,11 @@ export default async function HomePage() {
               { icon: Rocket, title: "Pemesanan Super Cepat", description: "Proses booking online yang mudah, hanya dalam beberapa klik mobil siap Anda gunakan." },
               { icon: LifeBuoy, title: "Dukungan Pelanggan Responsif", description: "Tim kami siap membantu Anda 24/7, menjawab pertanyaan dan mengatasi kendala dengan sigap." },
             ].map((item, index) => (
-              <Card key={index} className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Card 
+                key={index} 
+                className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div className="flex justify-center mb-4">
                   <item.icon className="h-12 w-12 text-primary" />
                 </div>
@@ -133,7 +139,11 @@ export default async function HomePage() {
               { icon: GitCompareArrows, title: "Fleksibilitas Tanpa Batas", description: "Berbagai pilihan mobil dan paket sewa yang bisa disesuaikan dengan kebutuhan Anda." },
               { icon: Sparkles, title: "Komitmen pada Kualitas", description: "Dari kebersihan mobil hingga layanan, kami tidak pernah berkompromi pada kualitas." },
             ].map((item, index) => (
-              <Card key={index} className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Card 
+                key={index} 
+                className="text-center p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div className="flex justify-center mb-4">
                   <item.icon className="h-12 w-12 text-accent" />
                 </div>
@@ -152,7 +162,7 @@ export default async function HomePage() {
 
       {/* Testimoni Section */}
       {testimonis && testimonis.length > 0 && (
-        <section id="testimonials" className="py-16 px-6 sm:px-10 lg:px-16">
+         <section id="testimonials" className="py-16 px-6 sm:px-10 lg:px-16">
           <div className="container mx-auto">
             <h2 className="text-4xl font-bold text-center mb-4 text-primary flex items-center justify-center">
                 <Users className="mr-3 h-10 w-10" /> Kata Pelanggan Kami
