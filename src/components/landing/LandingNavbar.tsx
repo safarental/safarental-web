@@ -17,7 +17,7 @@ const navLinks = [
   { href: '/#cars', label: 'Armada' },
   { href: '/#gallery', label: 'Galeri' },
   { href: '/#faq', label: 'FAQ' },
-  // { href: '/about-us', label: 'Tentang Kami' }, // Link Tentang Kami dihapus
+  // { href: '/about-us', label: 'Tentang Kami' }, // Link Tentang Kami sudah dihapus dan tetap dihapus
 ];
 
 export function LandingNavbar({ websiteName }: LandingNavbarProps) {

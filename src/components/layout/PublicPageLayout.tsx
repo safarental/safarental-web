@@ -1,6 +1,6 @@
 
 import type { ReactNode } from 'react';
-// import { LandingNavbar } from '@/components/landing/LandingNavbar'; // Dihapus
+import { LandingNavbar } from '@/components/landing/LandingNavbar'; // Di-uncomment dan diimpor
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { API_BASE_URL } from '@/config';
 import type { LandingPageApiResponse, MetaWebLanding } from '@/types/LandingPageData';
@@ -54,7 +54,7 @@ export default async function PublicPageLayout({
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      {/* <LandingNavbar websiteName={metaWeb?.website_name} /> */} {/* Navbar tidak lagi dirender di sini */}
+      <LandingNavbar websiteName={metaWeb?.website_name} /> {/* Navbar dirender di sini */}
       <main className="flex-1">{children}</main>
       <LandingFooter meta_web={metaWeb} websiteName={metaWeb?.website_name} />
     </div>
