@@ -18,7 +18,7 @@ export interface Mobil {
   seat: number;
   description?: string | null;
   status: CarStatus;
-  price: number;
+  price: string; // Diubah menjadi string untuk mengakomodasi respons API landing page
   picture_upload?: string | null;
   created_at?: string;
   updated_at?: string;
@@ -28,7 +28,7 @@ export interface PaginatedCarsResponse {
   message: string;
   data: {
     current_page: number;
-    data: Mobil[];
+    data: Mobil[]; // Mobil di sini akan memiliki price sebagai string jika digunakan untuk list API yang mengembalikan string
     first_page_url: string;
     from: number;
     last_page: number;
@@ -45,5 +45,6 @@ export interface PaginatedCarsResponse {
 
 export interface MobilDetailResponse {
     message: string;
-    data: Mobil;
+    data: Mobil; // Mobil di sini akan memiliki price sebagai string
 }
+
