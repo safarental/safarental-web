@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import AppHeader from './AppHeader';
-import { Loader2, Building, LayoutDashboard, UserCircle } from 'lucide-react';
+import { Loader2, Building, LayoutDashboard, UserCircle, Car } from 'lucide-react'; // Added Car icon
 import {
   SidebarProvider,
   Sidebar,
@@ -18,7 +18,7 @@ import {
   SidebarMenuButton,
   SidebarInset,
   SidebarFooter,
-} from '@/components/ui/sidebar'; // Assuming SidebarFooter exists or can be added
+} from '@/components/ui/sidebar';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -55,8 +55,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton 
-                asChild 
+              <SidebarMenuButton
+                asChild
                 isActive={pathname === '/admin/dashboard'}
                 tooltip={{ children: "Dashboard", side: "right", align: "center" }}
               >
@@ -66,9 +66,21 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            <SidebarMenuItem> {/* Mobil Menu Item */}
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith('/admin/cars')}
+                tooltip={{ children: "Cars Management", side: "right", align: "center" }}
+              >
+                <Link href="/admin/cars">
+                  <Car />
+                  <span>Cars</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton 
-                asChild 
+              <SidebarMenuButton
+                asChild
                 isActive={pathname === '/profile'}
                 tooltip={{ children: "Profile", side: "right", align: "center" }}
               >
@@ -94,9 +106,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </Sidebar>
       <SidebarInset>
         <AppHeader />
-        <div className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="flex-1 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
-        </div>
+        </main>
         <footer className="border-t bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-between gap-4 md:h-20 md:flex-row py-6">
             <p className="text-balance text-center text-sm leading-loose text-muted-foreground md:text-left">
