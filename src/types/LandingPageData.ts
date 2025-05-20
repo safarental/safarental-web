@@ -2,24 +2,26 @@
 import type { Mobil } from './mobil';
 import type { Gallery } from './gallery';
 import type { Faq } from './faq';
-import type { Testimoni } from './testimoni'; // Pastikan ini diimpor
+import type { Testimoni } from './testimoni';
 
 export interface MetaWebLanding {
-  website_name?: string | null; // Ditambahkan dari update page.tsx
-  description?: string | null; // Ditambahkan dari update page.tsx
+  website_name?: string | null;
+  description?: string | null;
   whatsapp?: string | null;
   instagram?: string | null;
   address?: string | null;
   email?: string | null;
+  // Visi dan Misi tidak ada di endpoint /home, jadi tidak perlu di sini
+  // vision?: string | null; 
+  // mission?: string | null;
 }
 
 export interface LandingPageData {
   meta_web: MetaWebLanding | null;
-  mobils: Mobil[]; // Mobil di sini akan memiliki price sebagai string
+  mobils: Mobil[];
   galleries: Gallery[];
   testimonis: Testimoni[];
   faqs: Faq[];
 }
 
-// This is the expected structure from the API endpoint /home
 export interface LandingPageApiResponse extends LandingPageData {}
