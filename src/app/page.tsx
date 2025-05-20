@@ -26,22 +26,22 @@ export const metadata: Metadata = {
     description: 'Sewa mobil murah, aman, dan terpercaya di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Armada lengkap dan layanan prima dari Safarental.',
     url: 'https://safarental.com',
     siteName: 'Safarental',
-    // images: [ // Optional: Add images for Open Graph
+    // images: [ // Disarankan untuk menambahkan URL gambar absolut di sini
     //   {
-    //     url: 'https://safarental.com/og-image.png', // Must be an absolute URL
-    //     width: 800,
-    //     height: 600,
-    //     alt: 'Safarental - Rental Mobil Terbaik',
+    //     url: 'https://safarental.com/og-image.png', 
+    //     width: 1200,
+    //     height: 630,
+    //     alt: 'Safarental - Rental Mobil Terbaik di Kalimantan',
     //   },
     // ],
     locale: 'id_ID',
     type: 'website',
   },
-  twitter: { // Optional: Add Twitter card data
-    card: 'summary_large_image',
+  twitter: { 
+    card: 'summary_large_image', // Gunakan 'summary' jika tidak ada gambar utama yang besar
     title: 'Sewa & Rental Mobil Terbaik di Kalimantan | Safarental',
     description: 'Sewa mobil murah, aman, dan terpercaya di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, dan Paser. Armada lengkap dan layanan prima dari Safarental.',
-    // images: ['https://safarental.com/twitter-image.png'], // Must be an absolute URL
+    // images: ['https://safarental.com/twitter-image.png'], // URL absolut ke gambar untuk Twitter
   },
 };
 
@@ -107,6 +107,7 @@ export default async function HomePage() {
 
   const { meta_web, mobils, galleries, testimonis, faqs } = data;
   const websiteName = meta_web?.website_name || "Safarental"; 
+  const heroDescription = meta_web?.description || "Jelajahi armada premium kami, nikmati harga terbaik, dan layanan pelanggan yang siap membuat setiap perjalanan Anda istimewa. Booking mudah, pengalaman tak terlupakan!";
 
   return (
     <PublicPageLayout>
@@ -117,7 +118,7 @@ export default async function HomePage() {
             Kendaraan Impian, Perjalanan Tak Terlupakan Bersama <span className="text-accent">{websiteName}</span>!
           </h1>
           <p className="text-lg sm:text-xl mb-10 max-w-3xl mx-auto text-primary-foreground/90 animate-in fade-in slide-in-from-top-8 duration-700 delay-200">
-            Jelajahi armada premium kami, nikmati harga terbaik, dan layanan pelanggan yang siap membuat setiap perjalanan Anda istimewa. Booking mudah, pengalaman tak terlupakan!
+            {heroDescription}
           </p>
           <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg animate-in fade-in zoom-in-90 duration-700 delay-400">
             <Link href="#cars">Lihat Pilihan Mobil <ChevronRight className="ml-2 h-5 w-5" /></Link>
@@ -241,3 +242,5 @@ export default async function HomePage() {
     </PublicPageLayout>
   );
 }
+
+    
