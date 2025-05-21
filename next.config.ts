@@ -19,12 +19,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'aef8-2001-448a-20a2-117e-7975-5c70-d28d-3470.ngrok-free.app',
-        port: '',
-        pathname: '/**', // Allow any path from this hostname
-      },
-      {
-        protocol: 'https',
         hostname: 'larger-gourmet-peninsula-tribal.trycloudflare.com',
         port: '',
         pathname: '/**', // Allow any path from this hostname
