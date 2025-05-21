@@ -34,6 +34,7 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     };
 
     if (!responseData.meta_web) {
+      console.warn("Data meta_web tidak ditemukan dalam respons API, menggunakan nilai default.");
       responseData.meta_web = metaWebDefaults;
     } else {
        responseData.meta_web.website_name = responseData.meta_web.website_name || metaWebDefaults.website_name;
@@ -82,15 +83,15 @@ export async function generateMetadata(
       description: pageDescription,
       url: 'https://safarental.com',
       siteName: websiteName,
-      images: [
-        // {
-        //   url: 'https://safarental.com/og-image.png', 
-        //   width: 1200,
-        //   height: 630,
-        //   alt: `${websiteName} - Rental Mobil Terbaik di Kalimantan`,
-        // },
-        ...previousImages,
-      ],
+      // images: [
+      //   {
+      //     url: 'https://safarental.com/og-image.png', 
+      //     width: 1200,
+      //     height: 630,
+      //     alt: `${websiteName} - Rental Mobil Terbaik di Kalimantan`,
+      //   },
+      //   ...previousImages,
+      // ],
       locale: 'id_ID',
       type: 'website',
     },
@@ -164,7 +165,7 @@ export default async function HomePage() {
             {heroDescription}
           </p>
           <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg animate-in fade-in zoom-in-90 duration-700 delay-400">
-            <Link href="#cars">Lihat Pilihan Mobil <ChevronRight className="ml-2 h-5 w-5" /></Link>
+            <Link href="#cars">Jelajahi Mobil <ChevronRight className="ml-2 h-5 w-5" /></Link>
           </Button>
         </div>
       </header>
