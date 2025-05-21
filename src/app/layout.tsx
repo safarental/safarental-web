@@ -18,11 +18,9 @@ export const metadata: Metadata = {
     template: '%s | Safarental',
   },
   description: 'Safarental menyediakan layanan sewa dan rental mobil terbaik di Kalimantan, Banjarmasin, Palangkaraya, Balikpapan, Paser dengan armada lengkap, harga bersaing, dan layanan prima.',
-  // Anda bisa menambahkan keywords default di sini juga jika diperlukan,
-  // tapi keywords per halaman biasanya lebih efektif.
-  // keywords: ['safarental', 'rental mobil', 'sewa mobil', 'kalimantan'],
-  // Untuk robots.txt dinamis atau metadata, Anda bisa menggunakan file-based metadata API
-  // seperti `robots.ts` atau `manifest.ts` di direktori app jika diperlukan.
+  icons: {
+    icon: '/favicon.ico', // Updated favicon path
+  },
 };
 
 export default function RootLayout({

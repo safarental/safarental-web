@@ -2,8 +2,9 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image'; // Added import for Image
 import { useState } from 'react';
-import { Menu, X, Building } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -15,20 +16,27 @@ interface LandingNavbarProps {
 const navLinks = [
   { href: '/', label: 'Beranda' },
   { href: '/mobil', label: 'Semua Mobil'},
-  { href: '/about-us', label: 'Tentang Kami' },
+  // { href: '/about-us', label: 'Tentang Kami' }, // About Us link removed as per previous request
   { href: '/#faq', label: 'FAQ' },
 ];
 
 export function LandingNavbar({ websiteName }: LandingNavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const siteName = websiteName || 'Safarental';
 
   return (
     <nav className="bg-background/80 backdrop-blur-md shadow-md sticky top-0 z-50 w-full">
       <div className="container mx-auto px-6 sm:px-10 lg:px-16">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center gap-2">
-            <Building className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold text-primary">{websiteName || 'Safarental'}</span>
+            <Image 
+              src="/logo.png" 
+              alt={`${siteName} Logo`} 
+              width={32} // Adjust as needed
+              height={32} // Adjust as needed
+              className="h-8 w-auto" // Control visual size
+            />
+            <span className="text-xl font-bold text-primary">{siteName}</span>
           </Link>
 
           {/* Desktop Menu */}
@@ -38,7 +46,7 @@ export function LandingNavbar({ websiteName }: LandingNavbarProps) {
                 key={link.label}
                 href={link.href}
                 className={cn("text-foreground hover:text-primary transition-colors font-medium")}
-                onClick={() => setIsMobileMenuOpen(false)} // Tutup menu saat link diklik
+                onClick={() => setIsMobileMenuOpen(false)} 
               >
                 {link.label}
               </Link>

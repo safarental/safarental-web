@@ -2,8 +2,9 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image'; // Added import for Image
 import { useRouter } from 'next/navigation';
-import { Building, UserCircle, LogOut, LayoutDashboard } from 'lucide-react';
+import { UserCircle, LogOut, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
@@ -41,7 +42,13 @@ export default function AppHeader() {
         <div className="flex items-center gap-2">
           <SidebarTrigger className="mr-2 md:hidden" /> 
           <Link href="/admin/dashboard" className="flex items-center gap-2">
-            <Building className="h-7 w-7 text-primary" />
+            <Image 
+              src="/logo.png" 
+              alt="Safarental Admin Logo" 
+              width={32} // Adjust as needed
+              height={32} // Adjust as needed
+              className="h-8 w-auto" // Control visual size
+            />
             <span className="text-xl font-bold text-primary">Adminify</span>
           </Link>
         </div>
@@ -97,5 +104,3 @@ export default function AppHeader() {
     </header>
   );
 }
-
-    

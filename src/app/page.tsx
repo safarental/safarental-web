@@ -9,9 +9,10 @@ import { CarListSection } from '@/components/landing/CarListSection';
 import { FeedbackForm } from '@/components/landing/FeedbackForm';
 import { GallerySection } from '@/components/landing/GallerySection';
 import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
-import { ChevronRight, Car as CarIconLucide, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles } from 'lucide-react';
+import { ChevronRight, Car as CarIconLucide, Images, Users, HelpCircle, ServerCrash, CarFront, BadgePercent, Rocket, LifeBuoy, Award, HeartHandshake, GitCompareArrows, Sparkles, ArrowRight } from 'lucide-react';
 import PublicPageLayout from '@/components/layout/PublicPageLayout';
 import type { Metadata, ResolvingMetadata } from 'next';
+import { getPublicStorageUrl } from '@/lib/imageUtils'; // Ensure this is imported if used directly here, though likely used in sub-components
 
 // Fungsi untuk mengambil data dengan revalidasi
 async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
@@ -20,6 +21,9 @@ async function getLandingPageData(): Promise<LandingPageApiResponse | null> {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Gagal memuat data landing page:", response.status, errorText);
+      if (response.status === 404) {
+        console.warn("Endpoint /home tidak ditemukan (404). Menggunakan data default.");
+      }
       return null;
     }
     const responseData: LandingPageApiResponse = await response.json();
@@ -83,15 +87,15 @@ export async function generateMetadata(
       description: pageDescription,
       url: 'https://safarental.com',
       siteName: websiteName,
-      // images: [
-      //   {
-      //     url: 'https://safarental.com/og-image.png', 
-      //     width: 1200,
-      //     height: 630,
-      //     alt: `${websiteName} - Rental Mobil Terbaik di Kalimantan`,
-      //   },
-      //   ...previousImages,
-      // ],
+      images: [
+        {
+          url: 'https://safarental.com/og-image.png', 
+          width: 1200,
+          height: 630,
+          alt: `${websiteName} - Rental Mobil Terbaik di Kalimantan`,
+        },
+        ...previousImages,
+      ],
       locale: 'id_ID',
       type: 'website',
     },
@@ -99,9 +103,8 @@ export async function generateMetadata(
       card: 'summary_large_image',
       title: `Sewa & Rental Mobil Terbaik di Kalimantan | ${websiteName}`,
       description: pageDescription,
-      // images: ['https://safarental.com/twitter-image.png'],
+      images: ['https://safarental.com/twitter-image.png'],
     },
-    // Structured data
     other: {
       "application/ld+json": JSON.stringify({
         "@context": "https://schema.org",
@@ -113,9 +116,6 @@ export async function generateMetadata(
         ...(data?.meta_web?.address && {"address": {
           "@type": "PostalAddress",
           "streetAddress": data.meta_web.address,
-          // "addressLocality": "Kota", // Anda bisa tambahkan ini jika ada
-          // "addressRegion": "Provinsi", // Anda bisa tambahkan ini jika ada
-          // "postalCode": "KodePos", // Anda bisa tambahkan ini jika ada
           "addressCountry": "ID"
         }}),
         "areaServed": [
@@ -125,9 +125,9 @@ export async function generateMetadata(
           {"@type": "Place", "name": "Balikpapan"},
           {"@type": "Place", "name": "Paser"}
         ],
-        "image": "https://safarental.com/og-image.png", // Ganti dengan URL gambar utama Anda
-        "priceRange": "Rp", // Atau sesuaikan
-        "hasMap": "https://maps.google.com/?q=" + encodeURIComponent(data?.meta_web?.address || websiteName) // Contoh link peta
+        "image": "https://safarental.com/og-image.png", 
+        "priceRange": "Rp", 
+        "hasMap": "https://maps.google.com/?q=" + encodeURIComponent(data?.meta_web?.address || websiteName) 
       })
     }
   };
@@ -156,7 +156,7 @@ export default async function HomePage() {
   return (
     <PublicPageLayout>
       {/* Hero Section */}
-      <header className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground py-28 md:py-32 px-6 sm:px-10 lg:px-16 shadow-lg">
+      <header className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground py-28 md:py-36 px-6 sm:px-10 lg:px-16 shadow-lg">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 tracking-tight !leading-tight animate-in fade-in slide-in-from-top-10 duration-700">
             Kendaraan Impian, Perjalanan Tak Terlupakan Bersama <span className="text-accent">{websiteName}</span>!
@@ -164,7 +164,7 @@ export default async function HomePage() {
           <p className="text-lg sm:text-xl mb-10 max-w-3xl mx-auto text-primary-foreground/90 animate-in fade-in slide-in-from-top-8 duration-700 delay-200">
             {heroDescription}
           </p>
-          <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 text-lg animate-in fade-in zoom-in-90 duration-700 delay-400">
+          <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground px-10 py-4 text-xl animate-in fade-in zoom-in-90 duration-700 delay-400">
             <Link href="#cars">Jelajahi Mobil <ChevronRight className="ml-2 h-5 w-5" /></Link>
           </Button>
         </div>
@@ -202,6 +202,12 @@ export default async function HomePage() {
 
       {/* Armada Section */}
       <CarListSection mobils={mobils || []} meta_web={meta_web} websiteName={websiteName} />
+      <div className="container mx-auto text-center py-8 px-6 sm:px-10 lg:px-16">
+        <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg">
+          <Link href="/mobil">Jelajahi Semua Armada Kami <ArrowRight className="ml-2 h-5 w-5" /></Link>
+        </Button>
+      </div>
+
 
       {/* Kenapa Memilih Kami Section */}
       <section id="why-us" className="py-16 px-6 sm:px-10 lg:px-16">
@@ -286,4 +292,3 @@ export default async function HomePage() {
     </PublicPageLayout>
   );
 }
-    

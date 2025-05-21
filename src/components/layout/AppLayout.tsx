@@ -4,10 +4,11 @@
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image'; // Added import for Image
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import AppHeader from './AppHeader';
-import { Loader2, Building, LayoutDashboard, UserCircle, Car, ImageIcon as ImageIconLucide, Settings, HelpCircle } from 'lucide-react';
+import { Loader2, LayoutDashboard, UserCircle, Car, ImageIcon as ImageIconLucide, Settings, HelpCircle } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -48,7 +49,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <Sidebar>
         <SidebarHeader>
           <Link href="/admin/dashboard" className="flex items-center gap-2 px-2 py-1">
-            <Building className="h-7 w-7 text-sidebar-primary" />
+            <Image 
+              src="/logo.png" 
+              alt="Safarental Admin Logo" 
+              width={32} // Adjust as needed
+              height={32} // Adjust as needed
+              className="h-8 w-auto" // Control visual size
+            />
             <span className="text-xl font-bold text-sidebar-primary">Adminify</span>
           </Link>
         </SidebarHeader>
@@ -156,5 +163,3 @@ export default function AppLayout({ children }: AppLayoutProps) {
     </SidebarProvider>
   );
 }
-
-    
