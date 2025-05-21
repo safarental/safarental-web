@@ -1,6 +1,7 @@
 
-"use client";
-import { useState, useEffect, useCallback } from 'react';
+"use client"; 
+
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AppLayout from '@/components/layout/AppLayout';
@@ -13,10 +14,10 @@ import { API_BASE_URL } from '@/config';
 import { Loader2, PlusCircle, AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function CarsPage() {
+function CarsPageContent() {
   const [carsResponse, setCarsResponse] = useState<PaginatedCarsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isDeleting, setIsDeleting] = useState<number | null>(null); // Store ID of car being deleted
+  const [isDeleting, setIsDeleting] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { fetchWithAuth } = useAuth();
   const { toast } = useToast();
@@ -61,8 +62,6 @@ export default function CarsPage() {
         title: 'Sukses!',
         description: 'Mobil berhasil dihapus.',
       });
-      // Refetch cars for the current page
-      // If it was the last item on a page beyond page 1, go to previous page
       if (carsResponse?.data.data.length === 1 && currentPage > 1) {
         router.push(`/admin/cars?page=${currentPage - 1}`);
       } else {
@@ -84,7 +83,6 @@ export default function CarsPage() {
   };
 
   return (
-    <AppLayout>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <h1 className="text-3xl font-bold">Manajemen Mobil</h1>
@@ -153,6 +151,20 @@ export default function CarsPage() {
           </>
         )}
       </div>
+  );
+}
+
+export default function CarsPageWrapper() {
+  return (
+    <AppLayout>
+      <Suspense fallback={
+        <div className="flex justify-center items-center py-10">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <p className="ml-2">Memuat daftar mobil...</p>
+        </div>
+      }>
+        <CarsPageContent />
+      </Suspense>
     </AppLayout>
   );
 }
