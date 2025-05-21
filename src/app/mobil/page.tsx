@@ -1,9 +1,11 @@
 
+import type { SuspenseProps } from 'react'; // Added SuspenseProps for type safety if needed, though not directly used.
+import React, { Suspense } from 'react'; // Import Suspense
 import PublicPageLayout from '@/components/layout/PublicPageLayout';
 import CarListPageClient from './CarListPageClient';
 import type { MetaWebLanding, LandingPageApiResponse } from '@/types/LandingPageData';
 import { API_BASE_URL } from '@/config';
-import { ServerCrash } from 'lucide-react';
+import { ServerCrash, Loader2 } from 'lucide-react'; // Added Loader2
 import type { Metadata, ResolvingMetadata } from 'next';
 
 async function getMetaWebForCarList(): Promise<MetaWebLanding | null> {
@@ -108,7 +110,14 @@ export default async function MobilListPage() {
 
   return (
     <PublicPageLayout>
-      <CarListPageClient metaWeb={metaWeb} />
+      <Suspense fallback={
+        <div className="flex justify-center items-center py-10 min-h-[calc(100vh-20rem)]"> {/* Added min-h for better fallback visibility */}
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <p className="ml-3 text-lg">Memuat daftar mobil...</p>
+        </div>
+      }>
+        <CarListPageClient metaWeb={metaWeb} />
+      </Suspense>
     </PublicPageLayout>
   );
 }
