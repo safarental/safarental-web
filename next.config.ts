@@ -23,6 +23,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**', // Allow any path from this hostname
       },
+      {
+        protocol: 'https',
+        hostname: 'larger-gourmet-peninsula-tribal.trycloudflare.com',
+        port: '',
+        pathname: '/**', // Allow any path from this hostname
+      }
     ],
   },
 };
