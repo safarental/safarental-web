@@ -43,7 +43,7 @@ export default function AppHeader() {
           <SidebarTrigger className="mr-2 md:hidden" /> 
           <Link href="/admin/dashboard" className="flex items-center gap-2">
             <Image 
-              src="/logo.png" 
+              src="/logo.jpeg" 
               alt="Safarental Admin Logo" 
               width={32} // Adjust as needed
               height={32} // Adjust as needed

@@ -16,7 +16,7 @@ interface LandingNavbarProps {
 const navLinks = [
   { href: '/', label: 'Beranda' },
   { href: '/mobil', label: 'Semua Mobil'},
-  // { href: '/about-us', label: 'Tentang Kami' }, // About Us link removed as per previous request
+  { href: '/about-us', label: 'Tentang Kami' },
   { href: '/#faq', label: 'FAQ' },
 ];
 
@@ -30,7 +30,7 @@ export function LandingNavbar({ websiteName }: LandingNavbarProps) {
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center gap-2">
             <Image 
-              src="/logo.png" 
+              src="/logo.jpeg" 
               alt={`${siteName} Logo`} 
               width={32} // Adjust as needed
               height={32} // Adjust as needed

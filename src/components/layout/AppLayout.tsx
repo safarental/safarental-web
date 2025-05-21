@@ -50,7 +50,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <SidebarHeader>
           <Link href="/admin/dashboard" className="flex items-center gap-2 px-2 py-1">
             <Image 
-              src="/logo.png" 
+              src="/logo.jpeg" 
               alt="Safarental Admin Logo" 
               width={32} // Adjust as needed
               height={32} // Adjust as needed
