@@ -4,20 +4,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Mobil, PublicListMobilResponse, TRANSMISSION_TYPES } from '@/types/mobil';
+import { Mobil, TRANSMISSION_TYPES, PublicListMobilResponse, PublicPaginatedMobilData } from '@/types/mobil';
 import type { MetaWebLanding } from '@/types/LandingPageData';
 import { API_BASE_URL } from '@/config';
 import { getPublicStorageUrl } from '@/lib/imageUtils';
 import { Car as CarIcon, Eye, MessageCircle, CalendarDays, Settings, Users, DollarSign, Info, Palette, Filter, Search, Loader2, AlertTriangle, ChevronLeft, ChevronRight, ListCollapse } from 'lucide-react';
 import { Slider } from "@/components/ui/slider";
 
-const ITEMS_PER_PAGE = 6; 
 const ALL_TRANSMISSIONS_VALUE = "__ALL_TRANSMISSIONS__";
 
 interface Filters {
@@ -36,14 +36,20 @@ const formatPriceForDisplay = (priceString: string | number): string => {
 
 export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding | null }) {
   const [cars, setCars] = useState<Mobil[]>([]);
+  const [paginationData, setPaginationData] = useState<PublicPaginatedMobilData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+
   const [filters, setFilters] = useState<Filters>({
-    merk: '',
-    model: '',
-    transmission: '',
-    seat: '',
-    price: '2000000', 
+    merk: searchParams.get('merk') || '',
+    model: searchParams.get('model') || '',
+    transmission: searchParams.get('transmission') || '',
+    seat: searchParams.get('seat') || '',
+    price: searchParams.get('price') || '2000000', 
   });
   const [maxPriceRange, setMaxPriceRange] = useState(5000000); 
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
@@ -51,39 +57,52 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
   const [selectedCar, setSelectedCar] = useState<Mobil | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const buildQueryString = (page: number, currentFilters: Filters) => {
+    const queryParams = new URLSearchParams();
+    queryParams.append('page', String(page));
+    if (currentFilters.merk) queryParams.append('merk', currentFilters.merk);
+    if (currentFilters.model) queryParams.append('model', currentFilters.model);
+    if (currentFilters.transmission) queryParams.append('transmission', currentFilters.transmission);
+    if (currentFilters.seat && parseInt(currentFilters.seat) > 0) queryParams.append('seat', currentFilters.seat);
+    if (currentFilters.price && parseFloat(currentFilters.price) > 0) queryParams.append('price', currentFilters.price);
+    return queryParams.toString();
+  };
 
-  const fetchCars = useCallback(async () => {
+  const fetchCars = useCallback(async (page: number, appliedFilters: Filters) => {
     setIsLoading(true);
     setError(null);
-    const queryParams = new URLSearchParams();
-    if (filters.merk) queryParams.append('merk', filters.merk);
-    if (filters.model) queryParams.append('model', filters.model);
-    if (filters.transmission) queryParams.append('transmission', filters.transmission);
-    if (filters.seat && parseInt(filters.seat) > 0) queryParams.append('seat', filters.seat);
-    if (filters.price && parseFloat(filters.price) > 0) queryParams.append('price', filters.price);
-
+    const queryString = buildQueryString(page, appliedFilters);
+    
     try {
-      const response = await fetch(`${API_BASE_URL}/list-mobil?${queryParams.toString()}`);
+      const response = await fetch(`${API_BASE_URL}/list-mobil?${queryString}`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Gagal memuat data mobil.');
       }
       const data: PublicListMobilResponse = await response.json();
-      setCars(data.mobils || []);
-      setCurrentPage(1); 
+      setCars(data.mobils.data || []);
+      setPaginationData(data.mobils);
     } catch (err: any) {
       setError(err.message);
       setCars([]);
+      setPaginationData(null);
     } finally {
       setIsLoading(false);
     }
-  }, [filters]);
+  }, []);
 
   useEffect(() => {
-    fetchCars();
-  }, [fetchCars]);
-
+    const initialFilters: Filters = {
+      merk: searchParams.get('merk') || '',
+      model: searchParams.get('model') || '',
+      transmission: searchParams.get('transmission') || '',
+      seat: searchParams.get('seat') || '',
+      price: searchParams.get('price') || String(maxPriceRange),
+    };
+    setFilters(initialFilters);
+    fetchCars(currentPage, initialFilters);
+  }, [currentPage, searchParams, fetchCars, maxPriceRange]);
+  
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFilters(prev => ({ ...prev, [name]: value }));
@@ -103,20 +122,26 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
 
   const handleFilterSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
-    fetchCars();
+    const queryString = buildQueryString(1, filters); // Reset to page 1 on new filter
+    router.push(`/mobil?${queryString}`); // This will trigger useEffect via searchParams change
     if (isMobileFilterOpen) setIsMobileFilterOpen(false);
   };
   
   const handleClearFilters = () => {
-    setFilters({ merk: '', model: '', transmission: '', seat: '', price: String(maxPriceRange) });
+    const clearedFilters = { merk: '', model: '', transmission: '', seat: '', price: String(maxPriceRange) };
+    setFilters(clearedFilters);
+    const queryString = buildQueryString(1, clearedFilters); // Reset to page 1
+    router.push(`/mobil?${queryString}`);
+    if (isMobileFilterOpen) setIsMobileFilterOpen(false);
   };
 
-  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
-  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = cars.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(cars.length / ITEMS_PER_PAGE);
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && (!paginationData || newPage <= paginationData.last_page)) {
+        const queryString = buildQueryString(newPage, filters);
+        router.push(`/mobil?${queryString}`);
+    }
+  };
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const handleOpenModal = (mobil: Mobil) => {
     setSelectedCar(mobil);
@@ -275,7 +300,7 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
         <div className="text-center py-10">
           <AlertTriangle className="mx-auto h-12 w-12 text-destructive mb-4" />
           <p className="text-xl text-destructive">{error}</p>
-          <Button onClick={fetchCars} className="mt-4">Coba Lagi</Button>
+          <Button onClick={() => fetchCars(currentPage, filters)} className="mt-4">Coba Lagi</Button>
         </div>
       )}
       {!isLoading && !error && cars.length === 0 && (
@@ -285,10 +310,10 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
           <p className="text-sm text-muted-foreground">Coba ubah filter Anda atau hapus beberapa filter.</p>
         </div>
       )}
-      {!isLoading && !error && cars.length > 0 && (
+      {!isLoading && !error && cars.length > 0 && paginationData && (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {currentItems.map((mobil, index) => (
+            {cars.map((mobil, index) => (
               <Card key={mobil.id} className="flex flex-col md:flex-row md:h-64 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <div className="w-full md:w-1/3 h-56 md:h-full relative flex-shrink-0 bg-muted/50">
                   <Image
@@ -337,27 +362,36 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
             ))}
           </div>
 
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center space-x-2 mt-8">
-              <Button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} variant="outline" size="icon">
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <Button
-                  key={page}
-                  onClick={() => paginate(page)}
-                  variant={currentPage === page ? 'default' : 'outline'}
-                  size="icon"
-                  className="h-9 w-9"
-                >
-                  {page}
-                </Button>
-              ))}
-              <Button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} variant="outline" size="icon">
-                <ChevronRight className="h-5 w-5" />
-              </Button>
+          {paginationData && paginationData.total > paginationData.per_page && (
+            <div className="flex items-center justify-between pt-4">
+                <div>
+                    <p className="text-sm text-muted-foreground">
+                        Menampilkan {paginationData.from || 0} hingga {paginationData.to || 0} dari {paginationData.total} hasil
+                    </p>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={!paginationData.prev_page_url}
+                    >
+                        <ChevronLeft className="h-4 w-4 mr-1" />
+                        Sebelumnya
+                    </Button>
+                    <span className="text-sm">Halaman {currentPage} dari {paginationData.last_page}</span>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={!paginationData.next_page_url}
+                    >
+                        Berikutnya
+                        <ChevronRight className="h-4 w-4 ml-1" />
+                    </Button>
+                </div>
             </div>
-          )}
+        )}
         </>
       )}
 
@@ -372,7 +406,7 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
             </DialogHeader>
             <div className="mt-6">
               <div className="md:flex md:flex-row md:gap-6">
-                <div className="relative w-full md:w-2/5 h-64 md:h-72 rounded-lg overflow-hidden border bg-muted/50 mb-4 md:mb-0 flex-shrink-0">
+                <div className="relative w-full md:w-2/5 h-64 md:h-auto md:aspect-[4/3] rounded-lg overflow-hidden border bg-muted/50 mb-4 md:mb-0 flex-shrink-0">
                   <Image
                     src={getPublicStorageUrl(selectedCar.picture_upload) || `https://placehold.co/600x400.png`}
                     alt={`${selectedCar.merk} ${selectedCar.model}`}
@@ -419,4 +453,3 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
     </div>
   );
 }
-    

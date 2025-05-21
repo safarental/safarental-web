@@ -24,30 +24,50 @@ export interface Mobil {
   updated_at?: string;
 }
 
-export interface PaginatedCarsResponse {
-  message: string;
-  data: {
-    current_page: number;
-    data: Mobil[];
-    first_page_url: string;
-    from: number;
-    last_page: number;
-    last_page_url: string;
-    links: { url: string | null; label: string; active: boolean }[];
-    next_page_url: string | null;
-    path: string;
-    per_page: number;
-    prev_page_url: string | null;
-    to: number;
-    total: number;
-  };
+// Structure for paginated data in admin
+export interface AdminPaginatedMobilData {
+  current_page: number;
+  data: Mobil[];
+  first_page_url: string;
+  from: number;
+  last_page: number;
+  last_page_url: string;
+  links: { url: string | null; label: string; active: boolean }[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number;
+  total: number;
 }
 
-export interface MobilDetailResponse {
+export interface PaginatedCarsResponse { // Used in admin
+  message: string;
+  data: AdminPaginatedMobilData;
+}
+
+export interface MobilDetailResponse { // Used in admin
     message: string;
     data: Mobil;
 }
 
+// Structure for paginated data from public /list-mobil
+export interface PublicPaginatedMobilData {
+  current_page: number;
+  data: Mobil[];
+  first_page_url: string;
+  from: number | null; // API might return null if no items
+  last_page: number;
+  last_page_url: string;
+  links: { url: string | null; label: string; active: boolean }[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number | null; // API might return null if no items
+  total: number;
+}
+
 export interface PublicListMobilResponse {
-  mobils: Mobil[];
+  mobils: PublicPaginatedMobilData; // Updated for server-side pagination
 }
