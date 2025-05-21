@@ -76,18 +76,18 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
             {mobils.map((mobil, index) => (
               <Card 
                 key={mobil.id} 
-                className="flex flex-col md:flex-row overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="flex flex-col md:flex-row md:h-64 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <div className="w-full md:w-2/5 h-56 md:h-auto relative flex-shrink-0 bg-muted/50">
+                <div className="w-full md:w-1/3 h-56 md:h-full relative flex-shrink-0 bg-muted/50">
                   <Image
                     src={getPublicStorageUrl(mobil.picture_upload) || `https://placehold.co/600x400.png`}
                     alt={`${mobil.merk} ${mobil.model}`}
                     layout="fill"
                     objectFit="contain"
-                    className="p-2 md:p-3"
+                    className="p-3"
                     data-ai-hint={`${mobil.category} car`}
-                    priority={index === 0} // Prioritaskan gambar pertama
-                    sizes="(max-width: 767px) 90vw, (max-width: 1023px) 40vw, 20vw"
+                    priority={index < 2} 
+                    sizes="(max-width: 767px) 90vw, (max-width: 1023px) 40vw, 30vw"
                   />
                 </div>
 
@@ -142,20 +142,18 @@ export function CarListSection({ mobils, meta_web, websiteName }: CarListSection
             
             <div className="mt-6">
               <div className="md:flex md:flex-row md:gap-6">
-                {/* Image Section for Modal */}
                 <div className="relative w-full md:w-2/5 h-64 md:h-72 rounded-lg overflow-hidden border bg-muted/50 mb-4 md:mb-0 flex-shrink-0">
                   <Image
                     src={getPublicStorageUrl(selectedCar.picture_upload) || `https://placehold.co/600x400.png`}
                     alt={`${selectedCar.merk} ${selectedCar.model}`}
                     layout="fill"
                     objectFit="contain"
-                    className="p-2"
+                    className="p-3"
                     data-ai-hint={`${selectedCar.category} detail`}
                     sizes="(max-width: 767px) 90vw, 40vw"
                   />
                 </div>
 
-                {/* Details and Price Section for Modal */}
                 <div className="md:w-3/5 flex flex-col">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm mb-4">
                     <div className="flex items-start">

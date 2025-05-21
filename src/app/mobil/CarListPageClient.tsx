@@ -289,17 +289,17 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {currentItems.map((mobil, index) => (
-              <Card key={mobil.id} className="flex flex-col md:flex-row overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-full md:w-2/5 h-56 md:h-auto relative flex-shrink-0 bg-muted/50">
+              <Card key={mobil.id} className="flex flex-col md:flex-row md:h-64 overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div className="w-full md:w-1/3 h-56 md:h-full relative flex-shrink-0 bg-muted/50">
                   <Image
                     src={getPublicStorageUrl(mobil.picture_upload) || `https://placehold.co/600x400.png`}
                     alt={`${mobil.merk} ${mobil.model}`}
                     layout="fill"
                     objectFit="contain"
-                    className="p-2 md:p-3"
+                    className="p-3"
                     data-ai-hint={`${mobil.category} car`}
-                    priority={index < 2} // Prioritaskan 2 gambar pertama
-                    sizes="(max-width: 767px) 90vw, (max-width: 1023px) 40vw, 20vw"
+                    priority={index < 2} 
+                    sizes="(max-width: 767px) 90vw, (max-width: 1023px) 40vw, 30vw"
                   />
                 </div>
                 <div className="flex flex-col flex-1 p-4 justify-between">
@@ -378,7 +378,7 @@ export default function CarListPageClient({ metaWeb }: { metaWeb: MetaWebLanding
                     alt={`${selectedCar.merk} ${selectedCar.model}`}
                     layout="fill"
                     objectFit="contain"
-                    className="p-2"
+                    className="p-3"
                     data-ai-hint={`${selectedCar.category} detail`}
                     sizes="(max-width: 767px) 90vw, 40vw"
                   />
